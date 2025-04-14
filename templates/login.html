@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      flex-direction: column;
+    }
+
+    .login-image {
+      margin-bottom: 20px;
+    }
+
+    .login-image img {
+      max-width: 150px;
+      height: auto;
+    }
+
+    .login-container {
+      background: #1b1b1b;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
+      width: 350px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Imagen colocada por fuera del contenedor -->
+  <div class="login-image">
+    <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo">
+  </div>
+
+  <div class="login-container">
+    <h3 class="text-center mb-4">Iniciar Sesión</h3>
+    <form method="POST" action="{{ url_for('login') }}">
+      <div class="mb-3">
+        <label for="username" class="form-label">Usuario</label>
+        <input type="text" name="username" id="username" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input type="password" name="password" id="password" class="form-control" required>
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-light">Ingresar</button>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>

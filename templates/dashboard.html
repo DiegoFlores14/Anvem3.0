@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - {{ artist_name }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <!-- Carga la fuente Futura Std -->
+  <style>
+    @font-face {
+      font-family: 'Futura Std';
+      src: url("{{ url_for('static', filename='fonts/FuturaStd.woff2') }}") format('woff2'),
+           url("{{ url_for('static', filename='fonts/FuturaStd.woff') }}") format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+  </style>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #F2F0EB;
+      color: #001F24;
+    }
+    .header {
+      background-color: #000;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      height: 60px;
+    }
+    .header img {
+      width: 80px;
+      height: auto;
+    }
+    .header-title {
+      font-family: 'Futura Std', serif;
+      color: #BEA47D;
+      font-size: 28px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0;
+    }
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .header-right a {
+      color: #DFFBFF;
+      text-decoration: none;
+    }
+
+    .main-container {
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 80px auto 0 auto;
+    }
+
+    .row-quarter-info {
+      border-top: 1px solid #2A7F8E;
+      border-bottom: 1px solid #2A7F8E;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .quarter-select {
+      display: flex;
+      gap: 10px;
+    }
+    select.form-select.form-select-sm {
+      min-width: 100px;
+    }
+    .quarter-label-box {
+      text-align: center;
+      font-size: 0.9rem;
+      line-height: 1.2;
+      flex-grow: 1;
+    }
+    /* AHORA el año va arriba (quarter-label) y los meses abajo (quarter-dates) */
+    .quarter-label-box .quarter-label {
+      font-family: 'Futura Std', sans-serif;
+      font-weight: bold;
+      color: #001F24;
+    }
+    .quarter-label-box .quarter-dates {
+      color: #2A7F8E;
+      font-style: italic;
+    }
+
+    .btn.btn-outline-dark.btn-sm {
+      color: #001F24;
+      border-color: #001F24;
+    }
+    .btn.btn-outline-dark.btn-sm:hover {
+      background-color: #001F24;
+      color: #DFFBFF;
+    }
+    .btn.btn-warning {
+      background-color: #BEA47D;
+      border: none;
+      color: black;
+    }
+
+    .row-upper {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .left-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .stat-box {
+      background-color: white;
+      color: black;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      height: 135px;
+    }
+    .stat-box-header {
+      background-color: #161936;
+      color: white;
+      text-align: center;
+      padding: 0.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+      font-family: 'Futura Std', sans-serif;
+    }
+    .stat-box-body {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .center-box {
+      background-color: white;
+      border-radius: 10px;
+      color: black;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow: hidden;
+      width: 100%;
+      max-width: 380px;
+    }
+    .center-box-header {
+      background-color: #161936;
+      color: white;
+      text-align: center;
+      padding: 0.4rem;
+      width: 100%;
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+      font-family: 'Futura Std', sans-serif;
+    }
+    .center-box-body img {
+      width: 100%;
+      height: 248px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .right-duda {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .network-line, .line-below-duda {
+      width: 100%;
+      height: 1px;
+      background-color: #001F24;
+      margin: 0.3rem 0;
+    }
+    .network-title {
+      font-family: 'Futura Std', serif;
+      font-size: 1.2rem;
+      color: #001F24;
+      text-align: center;
+    }
+    .network-icons {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+    }
+    .network-icons img {
+      width: 32px;
+      height: 32px;
+    }
+    .duda-bottom {
+      text-align: right;
+      margin-top: auto;
+    }
+
+    .row-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+    .bottom-box {
+      background-color: white;
+      border-radius: 10px;
+      color: black;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      padding: 1rem;
+      flex: 1;
+      min-width: 300px;
+      position: relative;
+    }
+    .bottom-box-header {
+      background-color: #161936;
+      color: white;
+      text-align: center;
+      padding: 0.5rem;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      font-weight: bold;
+      margin: -1rem -1rem 1rem -1rem;
+      font-family: 'Futura Std', sans-serif;
+    }
+    .table-transparent tbody tr,
+    .table-transparent tbody td {
+      background-color: transparent !important;
+      border-bottom: 1px solid #001F24 !important;
+      color: #001F24 !important;
+    }
+    .table-transparent tbody td:first-child {
+      text-align: left;
+      padding-left: 1rem;
+    }
+    .table-transparent tbody td:last-child {
+      text-align: right;
+      padding-right: 1rem;
+    }
+
+    .toggle-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 15px;
+      background: #161936;
+      color: white;
+      padding: 4px 10px;
+      font-size: 12px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .toggle-btn:hover {
+      background: #2A7F8E;
+    }
+
+    .fade {
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+    }
+    .fade.show {
+      opacity: 1;
+    }
+
+    .source-chart img,
+    .song-chart img {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      margin-top: 1rem;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+    <h1 class="header-title">{{ artist_name }}</h1>
+    <div class="header-right">
+      <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <div class="row-quarter-info">
+      <form method="GET" action="{{ url_for('dashboard') }}" class="quarter-select">
+        <select name="year" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width: 100px;">
+          {% for y in available_years %}
+            <option value="{{ y }}" {% if selected_year == y %}selected{% endif %}>{{ y }}</option>
+          {% endfor %}
+        </select>
+        <select name="quarter" class="form-select form-select-sm" onchange="this.form.submit()">
+          {% for q in available_quarters %}
+            <option value="{{ q }}" {% if selected_quarter == q %}selected{% endif %}>T{{ q }}</option>
+          {% endfor %}
+        </select>
+      </form>
+      <div class="quarter-label-box">
+        <!-- EN ESTA PARTE VA EL AÑO ARRIBA Y LOS MESES ABAJO -->
+        <div class="quarter-label">{{ selected_year }}</div>
+        <div class="quarter-dates">{{ quarter_dates }}</div>
+      </div>
+      <a href="{{ url_for('download_statement', quarter=selected_quarter, year=selected_year) }}" class="btn btn-outline-dark btn-sm">DOWNLOAD STATEMENT</a>
+    </div>
+
+    <div class="row-upper">
+      <div class="left-col">
+        <!-- Primer contenedor => Royalties -->
+        <div class="stat-box">
+          <div class="stat-box-header">Royalties T{{ selected_quarter }}</div>
+          <div class="stat-box-body">${{ sheets["total_royalties"] | round(2) }}</div>
+        </div>
+        <!-- Segundo contenedor => Total Earned + selected_year -->
+        <div class="stat-box">
+          <div class="stat-box-header">Total Earned {{ selected_year }}</div>
+          <div class="stat-box-body">${{ future_total | default(0) | round(2) }}</div>
+        </div>
+      </div>
+
+      <div class="center-box">
+        <div class="center-box-header">{{ artist_name }}</div>
+        <div class="center-box-body">
+          <img src="{{ url_for('static', filename=artist_image) }}" alt="Artista">
+        </div>
+      </div>
+
+      <div class="right-duda">
+        <div class="network-top">
+          <div class="network-line"></div>
+          <h2 class="network-title">Stay Connected</h2>
+          <div class="network-line"></div>
+          <div class="network-icons">
+            <a href="https://instagram.com"><img src="{{ url_for('static', filename='images/instagram.png') }}" alt="Instagram"></a>
+            <a href="https://youtube.com"><img src="{{ url_for('static', filename='images/youtube.png') }}" alt="YouTube"></a>
+            <a href="https://anvemmusic.com"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Anvem"></a>
+          </div>
+        </div>
+        <div class="duda-bottom">
+          <span>¿Alguna duda o aclaración?</span>
+          <a href="https://anvemmusic.com/contacto" class="btn btn-warning">Contáctanos</a>
+        </div>
+        <div class="line-below-duda"></div>
+      </div>
+    </div>
+
+    <div class="row-bottom">
+      <div class="bottom-box">
+        <div class="bottom-box-header">Top Songs</div>
+        <div id="song-table" class="fade show">
+          {{ sheets["By Song"] | safe }}
+        </div>
+        <div id="song-chart" class="song-chart fade" style="display: none;">
+          <img src="{{ url_for('static', filename='generated/song_bar_chart.png') }}" alt="Bar Chart">
+        </div>
+        <button class="toggle-btn" onclick="toggleSongView()">show as source</button>
+      </div>
+
+      <div class="bottom-box">
+        <div class="bottom-box-header">Top Source</div>
+        <div id="source-table" class="fade show">
+          {{ sheets["By Source"] | safe }}
+        </div>
+        <div id="source-chart" class="source-chart fade" style="display: none;">
+          <img src="{{ url_for('static', filename='generated/source_pie_chart.png') }}" alt="Pie Chart">
+        </div>
+        <button class="toggle-btn" onclick="toggleSourceView()">show as source</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center py-3">
+    <small class="text-muted">© 2024 Anvem Music. Todos los derechos reservados.</small>
+  </footer>
+
+  <script>
+    function toggleSourceView() {
+      const table = document.getElementById('source-table');
+      const chart = document.getElementById('source-chart');
+      if (table.classList.contains('show')) {
+        table.classList.remove('show');
+        setTimeout(() => {
+          table.style.display = 'none';
+          chart.style.display = 'block';
+          requestAnimationFrame(() => chart.classList.add('show'));
+        }, 400);
+      } else {
+        chart.classList.remove('show');
+        setTimeout(() => {
+          chart.style.display = 'none';
+          table.style.display = 'block';
+          requestAnimationFrame(() => table.classList.add('show'));
+        }, 400);
+      }
+    }
+
+    function toggleSongView() {
+      const table = document.getElementById('song-table');
+      const chart = document.getElementById('song-chart');
+      if (table.classList.contains('show')) {
+        table.classList.remove('show');
+        setTimeout(() => {
+          table.style.display = 'none';
+          chart.style.display = 'block';
+          requestAnimationFrame(() => chart.classList.add('show'));
+        }, 400);
+      } else {
+        chart.classList.remove('show');
+        setTimeout(() => {
+          chart.style.display = 'none';
+          table.style.display = 'block';
+          requestAnimationFrame(() => table.classList.add('show'));
+        }, 400);
+      }
+    }
+  </script>
+</body>
+</html>
