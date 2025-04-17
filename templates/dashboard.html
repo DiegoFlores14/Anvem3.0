@@ -294,6 +294,7 @@
       margin-top: 1rem;
       border-radius: 10px;
     }
+    
   </style>
 </head>
 <body>
@@ -326,7 +327,13 @@
       </div>
       <a href="{{ url_for('download_statement', quarter=selected_quarter, year=selected_year) }}" class="btn btn-outline-dark btn-sm">DOWNLOAD STATEMENT</a>
     </div>
-
+    
+    <select id="quarterSelect" class="form-control">
+      {% for quarter in quarters %}
+          <option value="{{ quarter }}" {% if loop.index0 == 0 %}selected{% endif %}>{{ quarter }}</option>
+      {% endfor %}
+  </select>
+  
     <div class="row-upper">
       <div class="left-col">
         <!-- Primer contenedor => Royalties -->

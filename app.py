@@ -25,6 +25,37 @@ USERS = {
     "michel": {"password": "michel123", "artist": "Michel Cruz"},
     "oscar": {"password": "oscar123", "artist": "Oscar Regalado"},
     "rodrigo": {"password": "rodrigo123", "artist": "Rodrigo Flores"},
+    "anvemT": {"password": "anvem123", "artist": "ANVEMTUNES"},
+    "anvemL": {"password": "anvem123", "artist": "ANVEM LYRICS"},
+    "anvemP": {"password": "anvem123", "artist": "ANVEMPUBLISHING"},
+    "daniel": {"password": "daniel123", "artist": "Daniel Nava"},
+    "fuentes": {"password": "fuentes123", "artist": "Daniel Fuentes"},
+    "denilson": {"password": "denilson123", "artist": "Denilson Jaramillo"},
+    "felipe": {"password": "felipe123", "artist": "Felipe Manzanares"},
+    "fernando": {"password": "fernando123", "artist": "Fernando Rivas"},
+    "fidel": {"password": "fidel123", "artist": "Fidel Valenzuela"},
+    "galia": {"password": "galia123", "artist": "Galia Ortiz"},
+    "jadiel": {"password": "jadiel123", "artist": "Jadiel Jaramillo"},
+    "castro": {"password": "castro123", "artist": "Jose Castro"},
+    "marco": {"password": "marco123", "artist": "Marco Mendoza"},
+    "misael": {"password": "misael123", "artist": "Misael Sanchez"},
+    "paulino": {"password": "paulino123", "artist": "Paulino Salazar"},
+    "sergio": {"password": "sergio123", "artist": "Sergio Espinoza"},
+    "victor": {"password": "victor123", "artist": "Victor Garcia"},
+    "emiliano": {"password": "emiliano123", "artist": "Emiliano Morales"},
+    "paez": {"password": "paez123", "artist": "Erick Paez"},
+    "gustavo": {"password": "gustavo123", "artist": "Gustavo Castillo"},
+    "pablo": {"password": "pablo123", "artist": "Pablo Rodriguez"},
+    "padilla": {"password": "padilla123", "artist": "Marco Padilla"},
+    "eduardo": {"password": "eduardo123", "artist": "Eduardo Oveso"},
+    "omar": {"password": "omar123", "artist": "Omar Anaya"},
+    "flores": {"password": "flores123", "artist": "Oscar Flores"},
+    "paulina": {"password": "paulina123", "artist": "Paulina Servin"},
+    "ramon": {"password": "ramon123", "artist": "Ramon Cuamea"},
+    "valdez": {"password": "valdez123", "artist": "Victor Valdez"},
+    "orlando": {"password": "orlando123", "artist": "David Orlando"},
+    "gurrola": {"password": "gurrola123", "artist": "Eduardo Gurrola"},
+    "pedro": {"password": "pedro123", "artist": "Pedro Villa"},
     "samantha": {"password": "samantha123", "artist": "Samantha Barrón"}
 }
 
@@ -237,7 +268,7 @@ def dashboard():
     matched = [m for m in (pattern.match(f) for f in all_files) if m]
     available_years = sorted(set(m.group(2) for m in matched))
     selected_year = request.args.get("year") or (available_years[-1] if available_years else "2024")
-    available_quarters = sorted(set(m.group(1) for m in matched if m.group(2) == selected_year))
+    available_quarters = sorted(set(m.group(1) for m in matched if m.group(2) == selected_year), reverse=True)
     selected_quarter = request.args.get("quarter") or (available_quarters[0] if available_quarters else "1")
     
     sheets_data = load_excel_data(artist, selected_quarter, selected_year)
