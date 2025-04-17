@@ -209,16 +209,15 @@ def load_excel_data(artist, quarter, year):
         )
     except Exception as e:
         sheets_data["By Source"] = f"<p style='color:red;'>Error 'By Source': {e}</p>"
-
     try:
         df_statement = pd.read_excel(file_path, sheet_name="Statement", skiprows=8)
         tr, _ = clean_statement(df_statement, quarter)
-        sheets_data["total_royalties"] = float(tr or 0)
+        sheets_data["total_royalties"] = float(tr or 0) * 0.9  # Aplica el impuesto del 10%
     except Exception:
         sheets_data["total_royalties"] = 0.0
 
     return sheets_data
-
+ 
 def calculate_future_total(artist, selected_quarter, selected_year):
     all_files = os.listdir(DATA_FOLDER)
     pattern = re.compile(re.escape(artist) + r"T(\d)-(\d{4})\.xlsx")
@@ -236,7 +235,7 @@ def calculate_future_total(artist, selected_quarter, selected_year):
                 total += float(tr or 0)
             except:
                 continue
-    return total
+    return total * 0.9
 
 @app.route("/")
 def index():
