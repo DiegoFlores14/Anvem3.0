@@ -12,51 +12,51 @@ os.makedirs(GENERATED_FOLDER, exist_ok=True)
 
 # Usuarios y sus artistas (conserva la estructura original)
 USERS = {
-    "gerardo": {"password": "gerardo123", "artist": "Gerardo Torres"},
-    "angel": {"password": "angel123", "artist": "Angel Rogriguez"},
-    "christian": {"password": "christian123", "artist": "Christian Morales"},
-    "erick": {"password": "erick123", "artist": "Erick Gutiérrez"},
-    "isauro": {"password": "isauro123", "artist": "Isauro Molinos"},
-    "olivas": {"password": "olivas123", "artist": "José Olivas"},
-    "romero": {"password": "romero123", "artist": "José Romero"},
-    "limon": {"password": "limon123", "artist": "Juan Limon"},
-    "julian": {"password": "julian123", "artist": "Julián Mercado"},
-    "macario": {"password": "macario123", "artist": "Macario Carvajal"},
-    "michel": {"password": "michel123", "artist": "Michel Cruz"},
-    "oscar": {"password": "oscar123", "artist": "Oscar Regalado"},
-    "rodrigo": {"password": "rodrigo123", "artist": "Rodrigo Flores"},
-    "anvemT": {"password": "anvem123", "artist": "ANVEMTUNES"},
-    "anvemL": {"password": "anvem123", "artist": "ANVEM LYRICS"},
-    "anvemP": {"password": "anvem123", "artist": "ANVEMPUBLISHING"},
-    "daniel": {"password": "daniel123", "artist": "Daniel Nava"},
-    "fuentes": {"password": "fuentes123", "artist": "Daniel Fuentes"},
-    "denilson": {"password": "denilson123", "artist": "Denilson Jaramillo"},
-    "felipe": {"password": "felipe123", "artist": "Felipe Manzanares"},
-    "fernando": {"password": "fernando123", "artist": "Fernando Rivas"},
-    "fidel": {"password": "fidel123", "artist": "Fidel Valenzuela"},
-    "galia": {"password": "galia123", "artist": "Galia Ortiz"},
-    "jadiel": {"password": "jadiel123", "artist": "Jadiel Jaramillo"},
-    "castro": {"password": "castro123", "artist": "Jose Castro"},
-    "marco": {"password": "marco123", "artist": "Marco Mendoza"},
-    "misael": {"password": "misael123", "artist": "Misael Sanchez"},
-    "paulino": {"password": "paulino123", "artist": "Paulino Salazar"},
-    "sergio": {"password": "sergio123", "artist": "Sergio Espinoza"},
-    "victor": {"password": "victor123", "artist": "Victor Garcia"},
-    "emiliano": {"password": "emiliano123", "artist": "Emiliano Morales"},
-    "paez": {"password": "paez123", "artist": "Erick Paez"},
-    "gustavo": {"password": "gustavo123", "artist": "Gustavo Castillo"},
-    "pablo": {"password": "pablo123", "artist": "Pablo Rodriguez"},
-    "padilla": {"password": "padilla123", "artist": "Marco Padilla"},
-    "eduardo": {"password": "eduardo123", "artist": "Eduardo Oveso"},
-    "omar": {"password": "omar123", "artist": "Omar Anaya"},
-    "flores": {"password": "flores123", "artist": "Oscar Flores"},
-    "paulina": {"password": "paulina123", "artist": "Paulina Servin"},
-    "ramon": {"password": "ramon123", "artist": "Ramon Cuamea"},
-    "valdez": {"password": "valdez123", "artist": "Victor Valdez"},
-    "orlando": {"password": "orlando123", "artist": "David Orlando"},
-    "gurrola": {"password": "gurrola123", "artist": "Eduardo Gurrola"},
-    "pedro": {"password": "pedro123", "artist": "Pedro Villa"},
-    "samantha": {"password": "samantha123", "artist": "Samantha Barrón"}
+    "GerardoTAnvem": {"password": "Gerardo444A", "artist": "Gerardo Torres"},
+    "AngelRAnvem": {"password": "Angel758A", "artist": "Angel Rodriguez"},
+    "ChristianMAnvem": {"password": "Christian467A", "artist": "Christian Morales"},
+    "ErickGAnvem": {"password": "Erick178A", "artist": "Erick Gutiérrez"},
+    "IsauroMAnvem": {"password": "Isauro999A", "artist": "Isauro Molinos"},
+    "JoseOAnvem": {"password": "Jose412A", "artist": "José Olivas"},
+    "JoseRomeroAnvem": {"password": "Jose223A", "artist": "José Romero"},
+    "JuanLAnvem": {"password": "Juan111A", "artist": "Juan Limon"},
+    "JulianMAnvem": {"password": "Julian657A", "artist": "Julián Mercado"},
+    "MacarioCAnvem": {"password": "Macario963A", "artist": "Macario Carvajal"},
+    "MichelCAnvem": {"password": "Michel582A", "artist": "Michel Cruz"},
+    "OscarRAnvem": {"password": "Oscar333A", "artist": "Oscar Regalado"},
+    "RodrigoFAnvem": {"password": "Rodrigo741A", "artist": "Rodrigo Flores"},
+    "AnvemT": {"password": "Anvem123A", "artist": "ANVEMTUNES"},
+    "AnvemL": {"password": "Anvem321A", "artist": "ANVEM LYRICS"},
+    "AnvemP": {"password": "Anvem213A", "artist": "ANVEMPUBLISHING"},
+    "DanielNAnvem": {"password": "Daniel874A", "artist": "Daniel Nava"},
+    "DanielFAnvem": {"password": "Daniel777A", "artist": "Daniel Fuentes"},
+    "DenilsonJAnvem": {"password": "Denilson145A", "artist": "Denilson Jaramillo"},
+    "FelipeMAnvem": {"password": "Felipe654A", "artist": "Felipe Manzanares"},
+    "FernandoRAnvem": {"password": "Fernando888A", "artist": "Fernando Rivas"},
+    "FidelVAnvem": {"password": "Fidel547A", "artist": "Fidel Valenzuela"},
+    "GaliaOAnvem": {"password": "Galia912A", "artist": "Galia Ortiz"},
+    "JadielJAnvem": {"password": "Jadiel487A", "artist": "Jadiel Jaramillo"},
+    "JoseCAnvem": {"password": "Castro479A", "artist": "Jose Castro"},
+    "MarcoMAnvem": {"password": "Marco845A", "artist": "Marco Mendoza"},
+    "MisaelSAnvem": {"password": "Misael845A", "artist": "Misael Sanchez"},
+    "PaulinoSAnvem": {"password": "Paulino663A", "artist": "Paulino Salazar"},
+    "SergioEAnvem": {"password": "Sergio332A", "artist": "Sergio Espinoza"},
+    "VictorGAnvem": {"password": "Victor143A", "artist": "Victor Garcia"},
+    "EmilianoMAnvem": {"password": "Emiliano917A", "artist": "Emiliano Morales"},
+    "ErickPAnvem": {"password": "Erick555A", "artist": "Erick Paez"},
+    "GustavoCAnvem": {"password": "Gustavo872A", "artist": "Gustavo Castillo"},
+    "PabloRAnvem": {"password": "Pablo657A", "artist": "Pablo Rodriguez"},
+    "MarcoPAnvem": {"password": "Padilla431A", "artist": "Marco Padilla"},
+    "EduardoOAnvem": {"password": "Eduardo678A", "artist": "Eduardo Oveso"},
+    "OmarAANVEM": {"password": "Omar712A", "artist": "Omar Anaya"},
+    "OscarFAnvem": {"password": "Oscar441A", "artist": "Oscar Flores"},
+    "PaulinaSAnvem": {"password": "Paulina478A", "artist": "Paulina Servin"},
+    "RamonCAnvem": {"password": "Ramon614A", "artist": "Ramon Cuamea"},
+    "VictorVAnvem": {"password": "Valdez455A", "artist": "Victor Valdez"},
+    "DavidOAnvem": {"password": "Orlando731A", "artist": "David Orlando"},
+    "EduardiGAnvem": {"password": "Gurrola558A", "artist": "Eduardo Gurrola"},
+    "PedroVAnvem": {"password": "Pedro111A", "artist": "Pedro Villa"},
+    "SamanthaBAnvem": {"password": "Samantha663", "artist": "Samantha Barrón"}
 }
 
 # Palabras clave para búsqueda de columnas
@@ -161,31 +161,54 @@ def clean_statement(df, quarter):
                     total = 0.0
     return total, 0
 
+import pandas as pd
 import openpyxl
 
-def load_net_payment_optimized(file_path):
+def convert_excel_to_csv(file_path):
+    """Convierte el archivo de Excel a CSV, asegurando que incluimos solo las últimas 3 filas y la columna correcta."""
     try:
-        wb = openpyxl.load_workbook(file_path, data_only=True)
-        sheet = wb["Statement"]
-
-        total_royalties = 0.0
-        for row_idx in range(sheet.max_row - 3, sheet.max_row + 1):  # Últimas 3 filas
-            net_payment_cell = sheet[f"P{row_idx}"].value
-            amount_cell = sheet[f"Q{row_idx}"].value
-
-            if net_payment_cell and isinstance(net_payment_cell, str) and "Net Payment" in net_payment_cell:
-                try:
-                    total_royalties = float(amount_cell or 0)  # Captura la cantidad desde la columna Q
-                except ValueError:
-                    total_royalties = 0.0
-                break
+        df_statement = pd.read_excel(file_path, sheet_name="Statement", skiprows=8)
         
+        # Mostrar las columnas disponibles para identificar correctamente la columna de pagos
+        print("Columnas disponibles en Statement:", df_statement.columns)
+
+        # Tomar solo las últimas 3 filas
+        last_rows = df_statement.tail(3)
+        print("\nÚltimas 3 filas antes de filtrar columna Royalties:\n", last_rows)
+
+        # Filtrar la columna que realmente contiene los pagos
+        last_rows = last_rows[["Royalties"]]  # Usa "Royalties" en lugar de "Q"
+        print("\nÚltimas 3 filas de la columna Royalties:\n", last_rows)
+
+        csv_path = file_path.replace(".xlsx", ".csv")  # Generar nombre de archivo CSV
+        last_rows.to_csv(csv_path, index=False)  # Guardar en CSV
+        return csv_path
+    except Exception as e:
+        print(f"Error al convertir Excel a CSV: {e}")
+        return None
+
+def load_net_payment_from_csv(csv_path):
+    """Carga el valor desde CSV, asegurando que leemos la columna correcta."""
+    try:
+        df = pd.read_csv(csv_path)
+
+        # Verificar que la columna Royalties se cargó
+        print("\nColumnas disponibles en CSV:", df.columns)
+
+        # Mostrar las últimas 3 filas del CSV para confirmar los datos
+        print("\nÚltimas 3 filas de CSV:\n", df.tail(3))
+
+        # Extraer el último valor válido de la columna Royalties
+        total_royalties = df["Royalties"].dropna().astype(str).str.replace(',', '').astype(float).iloc[-1]
+
+        print("\nValor extraído de Royalties:", total_royalties)
         return total_royalties
     except Exception as e:
-        print(f"Error en carga de royalties: {e}")
+        print(f"Error al leer CSV: {e}")
         return 0.0
 
 def load_excel_data(artist, quarter, year):
+    """Carga los datos del artista desde los archivos de Excel y los optimiza."""
     filename = f"{artist}T{quarter}-{year}.xlsx"
     file_path = os.path.join(DATA_FOLDER, filename)
     sheets_data = {}
@@ -235,10 +258,15 @@ def load_excel_data(artist, quarter, year):
     except Exception as e:
         sheets_data["By Source"] = f"<p style='color:red;'>Error 'By Source': {e}</p>"
 
-    # Cargar Net Payment sin leer todo el archivo
-    sheets_data["total_royalties"] = load_net_payment_optimized(file_path)
+    # Convertir Excel a CSV y cargar los datos correctamente desde la columna Royalties
+    csv_path = convert_excel_to_csv(file_path)
+    if csv_path:
+        sheets_data["total_royalties"] = load_net_payment_from_csv(csv_path)
+    else:
+        sheets_data["total_royalties"] = 0.0
 
     return sheets_data
+
 
 
 def calculate_future_total(artist, selected_quarter, selected_year):
