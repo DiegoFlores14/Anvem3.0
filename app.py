@@ -161,10 +161,13 @@ def clean_statement(df, quarter):
                     total = 0.0
     return total, 0
 
+import openpyxl
+
 def load_excel_data(artist, quarter, year):
     filename = f"{artist}T{quarter}-{year}.xlsx"
     file_path = os.path.join(DATA_FOLDER, filename)
     sheets_data = {}
+
     if not os.path.exists(file_path):
         sheets_data["By Song"] = "<p style='color:red;'>Archivo no encontrado.</p>"
         sheets_data["By Source"] = "<p style='color:red;'>Archivo no encontrado.</p>"
@@ -172,7 +175,7 @@ def load_excel_data(artist, quarter, year):
         return sheets_data
 
     try:
-        df_song = pd.read_excel(file_path, sheet_name="By Song", skiprows=8)
+        df_song = pd.read_excel(file_path, sheet_name="By Song", skiprows=8, nrows=11)
         df_song_clean = clean_by_song(df_song)
         generate_song_bar_chart(df_song_clean)
         sheets_data["By Song"] = df_song_clean.to_html(
@@ -209,15 +212,32 @@ def load_excel_data(artist, quarter, year):
         )
     except Exception as e:
         sheets_data["By Source"] = f"<p style='color:red;'>Error 'By Source': {e}</p>"
+
     try:
-        df_statement = pd.read_excel(file_path, sheet_name="Statement", skiprows=8)
-        tr, _ = clean_statement(df_statement, quarter)
-        sheets_data["total_royalties"] = float(tr or 0) * 0.9  # Aplica el impuesto del 10%
-    except Exception:
+        # Cargar el archivo con openpyxl para mejorar el rendimiento
+        wb = openpyxl.load_workbook(file_path, data_only=True)
+        sheet = wb["Statement"]
+
+        total_royalties = 0.0  # Inicializar variable
+        for row in sheet.iter_rows(min_row=sheet.max_row - 3, max_row=sheet.max_row):  # Solo escanea las últimas 3 filas
+            net_payment_cell = row[15]  # Columna P (índice 15 en openpyxl)
+            amount_cell = row[16]  # Columna Q (índice 16 en openpyxl)
+            
+            if net_payment_cell.value and isinstance(net_payment_cell.value, str) and "Net Payment" in net_payment_cell.value:
+                try:
+                    total_royalties = float(amount_cell.value or 0)  # Captura el valor de la celda en columna Q
+                except ValueError:
+                    total_royalties = 0.0
+                break
+        
+        sheets_data["total_royalties"] = total_royalties
+    except Exception as e:
         sheets_data["total_royalties"] = 0.0
+        print(f"Error en carga de royalties: {e}")  # Imprime el error en caso de falla
 
     return sheets_data
- 
+
+
 def calculate_future_total(artist, selected_quarter, selected_year):
     all_files = os.listdir(DATA_FOLDER)
     pattern = re.compile(re.escape(artist) + r"T(\d)-(\d{4})\.xlsx")
