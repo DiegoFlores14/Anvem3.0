@@ -322,77 +322,76 @@
       </form>
       <div class="quarter-label-box">
         <!-- EN ESTA PARTE VA EL AÑO ARRIBA Y LOS MESES ABAJO -->
-        <div class="quarter-label">{{ selected_year }}</div>
-        <div class="quarter-dates">{{ quarter_dates }}</div>
-      </div>
-      <a href="{{ url_for('download_statement', quarter=selected_quarter, year=selected_year) }}" class="btn btn-outline-dark btn-sm">DOWNLOAD STATEMENT</a>
+<div class="quarter-label">{{ selected_year }}</div>
+<div class="quarter-dates" id="quarter-dates">Cargando fechas...</div>
+</div>
+<a href="{{ url_for('download_statement', quarter=selected_quarter, year=selected_year) }}" class="btn btn-outline-dark btn-sm">DOWNLOAD STATEMENT</a>
+</div>
+
+<div class="row-upper">
+  <div class="left-col">
+    <!-- Primer contenedor => Royalties -->
+    <div class="stat-box">
+      <div class="stat-box-header">Royalties T{{ selected_quarter }}</div>
+      <div class="stat-box-body" id="royalties-value">Cargando...</div>
     </div>
-    
-   
-  
-    <div class="row-upper">
-      <div class="left-col">
-        <!-- Primer contenedor => Royalties -->
-        <div class="stat-box">
-          <div class="stat-box-header">Royalties T{{ selected_quarter }}</div>
-          <div class="stat-box-body">${{ sheets["total_royalties"] | round(2) }}</div>
-        </div>
-        <!-- Segundo contenedor => Total Earned + selected_year -->
-        <div class="stat-box">
-          <div class="stat-box-header">Total Earned {{ selected_year }}</div>
-          <div class="stat-box-body">${{ future_total | default(0) | round(2) }}</div>
-        </div>
-      </div>
+    <!-- Segundo contenedor => Total Earned + selected_year -->
+    <div class="stat-box">
+      <div class="stat-box-header">Total Earned {{ selected_year }}</div>
+      <div class="stat-box-body" id="total-earned-value">Cargando...</div>
+    </div>
+  </div>
 
-      <div class="center-box">
-        <div class="center-box-header">{{ artist_name }}</div>
-        <div class="center-box-body">
-          <img src="{{ url_for('static', filename=artist_image) }}" alt="Artista">
-        </div>
-      </div>
+  <div class="center-box">
+    <div class="center-box-header">{{ artist_name }}</div>
+    <div class="center-box-body">
+      <img src="{{ url_for('static', filename=artist_image) }}" alt="Artista">
+    </div>
+  </div>
 
-      <div class="right-duda">
-        <div class="network-top">
-          <div class="network-line"></div>
-          <h2 class="network-title">Stay Connected</h2>
-          <div class="network-line"></div>
-          <div class="network-icons">
-            <a href="https://www.instagram.com/anvemmusic/"><img src="{{ url_for('static', filename='images/insta.png') }}" alt="Instagram"></a>
-            <a href="https://www.youtube.com/@AnvemMusic"><img src="{{ url_for('static', filename='images/youtube.png') }}" alt="YouTube"></a>
-            <a href="https://anvemmusic.com"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Anvem"></a>
-          </div>
-        </div>
-        <div class="duda-bottom">
-          <span>¿Alguna duda o aclaración?</span>
-          <a href="https://anvemmusic.com/contacto" class="btn btn-warning">Contáctanos</a>
-        </div>
-        <div class="line-below-duda"></div>
+  <div class="right-duda">
+    <div class="network-top">
+      <div class="network-line"></div>
+      <h2 class="network-title">Stay Connected</h2>
+      <div class="network-line"></div>
+      <div class="network-icons">
+        <a href="https://www.instagram.com/anvemmusic/"><img src="{{ url_for('static', filename='images/insta.png') }}" alt="Instagram"></a>
+        <a href="https://www.youtube.com/@AnvemMusic"><img src="{{ url_for('static', filename='images/youtube.png') }}" alt="YouTube"></a>
+        <a href="https://anvemmusic.com"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Anvem"></a>
       </div>
     </div>
-
-    <div class="row-bottom">
-      <div class="bottom-box">
-        <div class="bottom-box-header">Top Songs</div>
-        <div id="song-table" class="fade show">
-          {{ sheets["By Song"] | safe }}
-        </div>
-        <div id="song-chart" class="song-chart fade" style="display: none;">
-          <img src="{{ url_for('static', filename='generated/song_bar_chart.png') }}" alt="Bar Chart">
-        </div>
-        <button class="toggle-btn" onclick="toggleSongView()">show as source</button>
-      </div>
-
-      <div class="bottom-box">
-        <div class="bottom-box-header">Top Source</div>
-        <div id="source-table" class="fade show">
-          {{ sheets["By Source"] | safe }}
-        </div>
-        <div id="source-chart" class="source-chart fade" style="display: none;">
-          <img src="{{ url_for('static', filename='generated/source_pie_chart.png') }}" alt="Pie Chart">
-        </div>
-        <button class="toggle-btn" onclick="toggleSourceView()">show as source</button>
-      </div>
+    <div class="duda-bottom">
+      <span>¿Alguna duda o aclaración?</span>
+      <a href="https://anvemmusic.com/contacto" class="btn btn-warning">Contáctanos</a>
     </div>
+    <div class="line-below-duda"></div>
+  </div>
+</div>
+
+<div class="row-bottom">
+  <div class="bottom-box">
+    <div class="bottom-box-header">Top Songs</div>
+    <div id="song-table" class="fade show">
+      <!-- Aquí JS rellenará dinámicamente -->
+    </div>
+    <div id="song-chart" class="song-chart fade" style="display: none;">
+      <img src="{{ url_for('static', filename='generated/song_bar_chart.png') }}" alt="Bar Chart">
+    </div>
+    <button class="toggle-btn" onclick="toggleSongView()">show as source</button>
+  </div>
+
+  <div class="bottom-box">
+    <div class="bottom-box-header">Top Source</div>
+    <div id="source-table" class="fade show">
+      <!-- Aquí JS rellenará dinámicamente -->
+    </div>
+    <div id="source-chart" class="source-chart fade" style="display: none;">
+      <img src="{{ url_for('static', filename='generated/source_pie_chart.png') }}" alt="Pie Chart">
+    </div>
+    <button class="toggle-btn" onclick="toggleSourceView()">show as source</button>
+  </div>
+</div>
+
   </div>
 
   <footer class="text-center py-3">
@@ -440,5 +439,42 @@
       }
     }
   </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", loadDashboardData);
+  
+    function loadDashboardData() {
+      const year = "{{ selected_year }}";
+      const quarter = "{{ selected_quarter }}";
+  
+      fetch(`/load_dashboard_data?year=${year}&quarter=${quarter}`)
+        .then(response => response.json())
+        .then(data => {
+          // Royalties
+          const royaltiesEl = document.getElementById("royalties-value");
+          royaltiesEl.textContent = `$${parseFloat(data.sheets.total_royalties).toFixed(2)}`;
+  
+          // Total Earned
+          const totalEl = document.getElementById("total-earned-value");
+          totalEl.textContent = `$${parseFloat(data.future_total).toFixed(2)}`;
+  
+          // Quarter Dates
+          const qd = document.getElementById("quarter-dates");
+          qd.textContent = data.quarter_dates;
+  
+          // Tabla por canción
+          const songTable = document.getElementById("song-table");
+          songTable.innerHTML = data.sheets.by_song;
+  
+          // Tabla por fuente
+          const sourceTable = document.getElementById("source-table");
+          sourceTable.innerHTML = data.sheets.by_source;
+        })
+        .catch(err => {
+          console.error("Error cargando datos:", err);
+          alert("Error al cargar el dashboard. Intenta más tarde.");
+        });
+    }
+  </script>
+  
 </body>
 </html>

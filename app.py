@@ -56,7 +56,7 @@ USERS = {
     "DavidOAnvem": {"password": "Orlando731A", "artist": "David Orlando"},
     "EduardiGAnvem": {"password": "Gurrola558A", "artist": "Eduardo Gurrola"},
     "PedroVAnvem": {"password": "Pedro111A", "artist": "Pedro Villa"},
-    "SamanthaBAnvem": {"password": "Samantha663", "artist": "Samantha Barrón"}
+    "SamanthaBAnvem": {"password": "Samantha123", "artist": "Samantha Barrón"}
 }
 
 # Palabras clave para búsqueda de columnas
@@ -311,38 +311,56 @@ def logout():
 def dashboard():
     if "user" not in session:
         return redirect(url_for("login"))
-    
-    artist = USERS[session["user"]]["artist"]
+
+    user_info = USERS.get(session["user"])
+    artist = user_info["artist"]
+    artist_name = user_info.get("name", artist)  # por si tienes un nombre bonito
+    artist_image = f"images/{artist}.jpg"
+
+    # Obtener los archivos disponibles
     all_files = os.listdir(DATA_FOLDER)
     pattern = re.compile(re.escape(artist) + r"T(\d)-(\d{4})\.xlsx")
     matched = [m for m in (pattern.match(f) for f in all_files) if m]
+
+    # Obtener años y trimestres disponibles
     available_years = sorted(set(m.group(2) for m in matched))
     selected_year = request.args.get("year") or (available_years[-1] if available_years else "2024")
     available_quarters = sorted(set(m.group(1) for m in matched if m.group(2) == selected_year), reverse=True)
     selected_quarter = request.args.get("quarter") or (available_quarters[0] if available_quarters else "1")
-    
+
+    return render_template(
+        "dashboard.html",
+        artist_name=artist_name,
+        artist_image=artist_image,
+        selected_year=selected_year,
+        selected_quarter=selected_quarter,
+        available_years=available_years,
+        available_quarters=available_quarters
+    )
+
+
+@app.route("/load_dashboard_data")
+def load_dashboard_data():
+    if "user" not in session:
+        return {"error": "Unauthorized"}, 401
+
+    artist = USERS[session["user"]]["artist"]
+    selected_year = request.args.get("year")
+    selected_quarter = request.args.get("quarter")
     sheets_data = load_excel_data(artist, selected_quarter, selected_year)
     future_total = calculate_future_total(artist, selected_quarter, selected_year)
-    
-    # Se usa el valor sin "T" para obtener el rango
     quarter_key = selected_quarter.replace("T", "")
     quarter_range = QUARTER_RANGES.get(quarter_key, "Desconocido")
-    
-    artist_image = f"images/{artist}.jpg"
-    
-    return render_template("dashboard.html",
-        sheets=sheets_data,
-        selected_quarter=selected_quarter,
-        available_quarters=[f"{q}" for q in available_quarters],
-        selected_year=selected_year,
-        available_years=available_years,
-        # En el contenedor de FUTURE se mostrará "Total Earned {selected_year}"
-        quarter_label=f"Total Earned {selected_year}",
-        quarter_dates=f"{quarter_range} {selected_year}",
-        artist_name=artist,
-        artist_image=artist_image,
-        future_total=future_total
-    )
+
+    return {
+        "sheets": {
+            "by_song": sheets_data["By Song"],
+            "by_source": sheets_data["By Source"],
+            "total_royalties": sheets_data["total_royalties"]
+        },
+        "future_total": future_total,
+        "quarter_dates": f"{quarter_range} {selected_year}"
+    }
 
 @app.route("/download_statement")
 def download_statement():
