@@ -351,7 +351,7 @@ def download_statement():
     artist = USERS[session["user"]]["artist"]
     quarter = request.args.get("quarter")
     year = request.args.get("year")
-    filename = f"{artist}T{quarter}-{year}.xlsx"
+    filename = f"{artist}A{quarter}-{year}.xlsx"
     file_path = os.path.join(DATA_FOLDER, filename)
     if os.path.exists(file_path):
         return send_file(file_path, as_attachment=True)
