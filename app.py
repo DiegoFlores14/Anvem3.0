@@ -161,50 +161,31 @@ def clean_statement(df, quarter):
                     total = 0.0
     return total, 0
 
-import pandas as pd
-import openpyxl
-
-def convert_excel_to_csv(file_path):
-    """Convierte el archivo de Excel a CSV, asegurando que incluimos solo las últimas 3 filas y la columna correcta."""
+def extract_net_payment_from_by_song(file_path):
     try:
-        df_statement = pd.read_excel(file_path, sheet_name="Statement", skiprows=8)
-        
-        # Mostrar las columnas disponibles para identificar correctamente la columna de pagos
-        print("Columnas disponibles en Statement:", df_statement.columns)
+        df = pd.read_excel(file_path, sheet_name="By Song", skiprows=8, dtype=str)
+        df = df.fillna('')  # Aseguramos que no haya NaNs
 
-        # Tomar solo las últimas 3 filas
-        last_rows = df_statement.tail(3)
-        print("\nÚltimas 3 filas antes de filtrar columna Royalties:\n", last_rows)
-
-        # Filtrar la columna que realmente contiene los pagos
-        last_rows = last_rows[["Royalties"]]  # Usa "Royalties" en lugar de "Q"
-        print("\nÚltimas 3 filas de la columna Royalties:\n", last_rows)
-
-        csv_path = file_path.replace(".xlsx", ".csv")  # Generar nombre de archivo CSV
-        last_rows.to_csv(csv_path, index=False)  # Guardar en CSV
-        return csv_path
+        for i in range(len(df)):
+            for j in range(len(df.columns)):
+                cell_value = str(df.iloc[i, j]).strip().lower()
+                if "net payment" in cell_value:
+                    # Buscar en la columna siguiente
+                    if j + 1 < len(df.columns):
+                        value = df.iloc[i, j + 1]
+                    else:
+                        # Si no hay columna a la derecha, intenta columna anterior
+                        value = df.iloc[i, j - 1] if j > 0 else ""
+                    
+                    # Convertir el valor extraído a número limpio
+                    value = str(value).replace(",", "").replace("$", "").strip()
+                    try:
+                        return round(float(value), 2)
+                    except:
+                        return 0.0
+        return 0.0
     except Exception as e:
-        print(f"Error al convertir Excel a CSV: {e}")
-        return None
-
-def load_net_payment_from_csv(csv_path):
-    """Carga el valor desde CSV, asegurando que leemos la columna correcta."""
-    try:
-        df = pd.read_csv(csv_path)
-
-        # Verificar que la columna Royalties se cargó
-        print("\nColumnas disponibles en CSV:", df.columns)
-
-        # Mostrar las últimas 3 filas del CSV para confirmar los datos
-        print("\nÚltimas 3 filas de CSV:\n", df.tail(3))
-
-        # Extraer el último valor válido de la columna Royalties
-        total_royalties = df["Royalties"].dropna().astype(str).str.replace(',', '').astype(float).iloc[-1]
-
-        print("\nValor extraído de Royalties:", total_royalties)
-        return total_royalties
-    except Exception as e:
-        print(f"Error al leer CSV: {e}")
+        print(f"Error al extraer 'Net Payment' desde 'By Song': {e}")
         return 0.0
 
 def load_excel_data(artist, quarter, year):
@@ -258,12 +239,8 @@ def load_excel_data(artist, quarter, year):
     except Exception as e:
         sheets_data["By Source"] = f"<p style='color:red;'>Error 'By Source': {e}</p>"
 
-    # Convertir Excel a CSV y cargar los datos correctamente desde la columna Royalties
-    csv_path = convert_excel_to_csv(file_path)
-    if csv_path:
-        sheets_data["total_royalties"] = load_net_payment_from_csv(csv_path)
-    else:
-        sheets_data["total_royalties"] = 0.0
+    sheets_data["total_royalties"] = extract_net_payment_from_by_song(file_path)
+
 
     return sheets_data
 
@@ -274,19 +251,24 @@ def calculate_future_total(artist, selected_quarter, selected_year):
     pattern = re.compile(re.escape(artist) + r"T(\d)-(\d{4})\.xlsx")
     matched = [m for m in (pattern.match(f) for f in all_files) if m]
     total = 0.0
+
     for m in matched:
         q = int(m.group(1))
         y = int(m.group(2))
+
         if y == int(selected_year) and q <= int(selected_quarter):
             filename = f"{artist}T{q}-{selected_year}.xlsx"
             file_path = os.path.join(DATA_FOLDER, filename)
             try:
-                df = pd.read_excel(file_path, sheet_name="Statement", skiprows=8)
-                tr, _ = clean_statement(df, m.group(1))
-                total += float(tr or 0)
-            except:
+                # Extraer el Net Payment desde la hoja "By Song"
+                payment = extract_net_payment_from_by_song(file_path)
+                total += float(payment or 0)
+            except Exception as e:
+                print(f"Error leyendo archivo {filename}: {e}")
                 continue
-    return total * 0.9
+
+    return round(total, 2)  # Ya no se aplica el 10%
+
 
 @app.route("/")
 def index():
