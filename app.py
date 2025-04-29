@@ -23,7 +23,7 @@ USERS = {
     "JulianMercado": {"password": "Julian657A", "artist": "Julián Mercado"},
     "MacarioCarvajal": {"password": "Macario963A", "artist": "Macario Carvajal"},
     "MichelCruz": {"password": "Michel582A", "artist": "Michel Cruz"},
-    "OscarRegalo": {"password": "Oscar333A", "artist": "Oscar Regalado"},
+    "OscarRegalado": {"password": "Oscar333A", "artist": "Oscar Regalado"},
     "RodrigoFlores": {"password": "Rodrigo741A", "artist": "Rodrigo Flores"},
     "AnvemT": {"password": "Anvem123A", "artist": "ANVEMTUNES"},
     "AnvemL": {"password": "Anvem321A", "artist": "ANVEM LYRICS"},
