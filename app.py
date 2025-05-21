@@ -56,7 +56,8 @@ USERS = {
     "DavidOrlando": {"password": "Orlando731A", "artist": "David Orlando"},
     "EduardoGurrola": {"password": "Gurrola558A", "artist": "Eduardo Gurrola"},
     "PedroVilla": {"password": "Pedro111A", "artist": "Pedro Villa"},
-    "SamanthaBarron": {"password": "Samantha123A", "artist": "Samantha Barrón"}
+    "SamanthaBarron": {"password": "Samantha123A", "artist": "Samantha Barrón"},
+    "DashboardPrueba": {"password": "Password", "artist": "DashboardPrueba"}
 }
 
 # Palabras clave para búsqueda de columnas
