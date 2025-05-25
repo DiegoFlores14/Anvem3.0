@@ -13,6 +13,9 @@ os.makedirs(GENERATED_FOLDER, exist_ok=True)
 # Usuarios y sus artistas (conserva la estructura original)
 USERS = {
     "GerardoTorres": {"password": "Gerardo444A", "artist": "Gerardo Torres"},
+    "ANVEMP": {"password": "ANVEM111A", "artist": "ANVEM PUBLISHING"},
+    "ANVEML": {"password": "ANVEM222A", "artist": "ANVEM LYRICS"},
+    "ANVEMT": {"password": "ANVEM333A", "artist": "ANVEM TUNES"},
     "AngelRodriguez": {"password": "Angel758A", "artist": "Angel Rodriguez"},
     "ChristianMorales": {"password": "Christian467A", "artist": "Christian Morales"},
     "ErickGutierrez": {"password": "Erick178A", "artist": "Erick Gutiérrez"},
