@@ -57,6 +57,10 @@ USERS = {
     "EduardoGurrola": {"password": "Gurrola558A", "artist": "Eduardo Gurrola"},
     "PedroVilla": {"password": "Pedro111A", "artist": "Pedro Villa"},
     "SamanthaBarron": {"password": "Samantha123A", "artist": "Samantha Barrón"},
+    "CarlosRamirez": {"password": "Samantha123A", "artist": "Carlos Ramirez"},
+    "DavidLoya": {"password": "Samantha123A", "artist": "David Loya"},
+    "JuanLugo": {"password": "Samantha123A", "artist": "Juan Lugo"},
+    "MecsaSosa": {"password": "Samantha123A", "artist": "Mecsa Sosa"},
     "DashboardPrueba": {"password": "Password", "artist": "DashboardPrueba"}
 }
 
