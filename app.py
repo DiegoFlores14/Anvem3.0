@@ -30,7 +30,7 @@ USERS = {
     "RodrigoFlores": {"password": "Rodrigo741A", "artist": "Rodrigo Flores"},
     "AnvemT": {"password": "Anvem123A", "artist": "ANVEMTUNES"},
     "AnvemL": {"password": "Anvem321A", "artist": "ANVEM LYRICS"},
-    "AnvemP": {"password": "Anvem213A", "artist": "ANVEMPUBLISHING"},
+    "AnvemP": {"password": "Anvem213A", "artist": "ANVEM PUBLISHING"},
     "DanielNava": {"password": "Daniel874A", "artist": "Daniel Nava"},
     "DanielFuentes": {"password": "Daniel777A", "artist": "Daniel Fuentes"},
     "DenilsonJaramillo": {"password": "Denilson145A", "artist": "Denilson Jaramillo"},
