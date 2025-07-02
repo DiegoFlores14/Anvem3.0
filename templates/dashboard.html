@@ -383,8 +383,17 @@
 </div>
 
 <div class="row-upper">
-  <div class="left-col order-2 order-md-1">
-    <!-- Primer contenedor => Royalties -->
+  <!-- Imagen del artista: primero en móvil, segundo en escritorio -->
+  <div class="center-box order-1 order-md-2">
+    <div class="center-box-header">{{ artist_name }}</div>
+    <div class="center-box-body">
+      <img src="{{ url_for('static', filename=artist_image) }}" alt="Artista">
+    </div>
+  </div>
+
+  <!-- Estadísticas: segundo en móvil, primero en escritorio -->
+   <div class="left-col order-2 order-md-1">
+    
     <div class="stat-box">
       <div class="stat-box-header">Royalties T{{ selected_quarter }}</div>
       <div class="stat-box-body" id="royalties-value">Cargando...</div>
@@ -396,23 +405,22 @@
     </div>
   </div>
 
-  <div class="center-box order-1 order-md-2">
-    <div class="center-box-header">{{ artist_name }}</div>
-    <div class="center-box-body">
-      <img src="{{ url_for('static', filename=artist_image) }}" alt="Artista">
-    </div>
-  </div>
-
-  
- <div class="right-duda order-4 order-md-3">
+  <!-- Stay Connected: último en móvil y en escritorio -->
+  <div class="right-duda order-3 order-md-3">
     <div class="network-top">
       <div class="network-line"></div>
       <h2 class="network-title">Stay Connected</h2>
       <div class="network-line"></div>
       <div class="network-icons">
-        <a href="https://www.instagram.com/anvemmusic/"><img src="{{ url_for('static', filename='images/insta.png') }}" alt="Instagram"></a>
-        <a href="https://www.youtube.com/@AnvemMusic"><img src="{{ url_for('static', filename='images/youtube.png') }}" alt="YouTube"></a>
-        <a href="https://anvemmusic.com"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Anvem"></a>
+        <a href="https://www.instagram.com/anvemmusic/">
+          <img src="{{ url_for('static', filename='images/insta.png') }}" alt="Instagram">
+        </a>
+        <a href="https://www.youtube.com/@AnvemMusic">
+          <img src="{{ url_for('static', filename='images/youtube.png') }}" alt="YouTube">
+        </a>
+        <a href="https://anvemmusic.com">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Anvem">
+        </a>
       </div>
     </div>
     <div class="duda-bottom">
