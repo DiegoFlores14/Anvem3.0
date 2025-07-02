@@ -383,27 +383,27 @@
 </div>
 
 <div class="row-upper">
-  <div class="left-col">
+  <div class="left-col order-2 order-md-1">
     <!-- Primer contenedor => Royalties -->
     <div class="stat-box">
       <div class="stat-box-header">Royalties T{{ selected_quarter }}</div>
       <div class="stat-box-body" id="royalties-value">Cargando...</div>
     </div>
-    <!-- Segundo contenedor => Total Earned + selected_year -->
+    
     <div class="stat-box">
       <div class="stat-box-header">Total Earned {{ selected_year }}</div>
       <div class="stat-box-body" id="total-earned-value">Cargando...</div>
     </div>
   </div>
 
-  <div class="center-box">
+  <div class="center-box order-1 order-md-2">
     <div class="center-box-header">{{ artist_name }}</div>
     <div class="center-box-body">
       <img src="{{ url_for('static', filename=artist_image) }}" alt="Artista">
     </div>
   </div>
 
-  <div class="right-duda">
+  <div class="right-duda order-3">
     <div class="network-top">
       <div class="network-line"></div>
       <h2 class="network-title">Stay Connected</h2>
