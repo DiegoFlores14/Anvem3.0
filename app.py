@@ -59,7 +59,7 @@ USERS = {
     "PaulinaServin": {"password": "Paulina478A", "artist": "Paulina Servin"},
     "RamonCumea": {"password": "Ramon614A", "artist": "Ramon Cuamea"},
     "VictorValdez": {"password": "Valdez455A", "artist": "Victor Valdez"},
-    "DavidOrlando": {"password": "Orlando731A", "artist": "David Orlando"},
+    "DavidOrlando": {"password": "Orlando731A", "artist": "David Loya"},
     "EduardoGurrola": {"password": "Gurrola558A", "artist": "Eduardo Gurrola"},
     "PedroVilla": {"password": "Pedro111A", "artist": "Pedro Villa"},
     "SamanthaBarron": {"password": "Samantha123A", "artist": "Samantha Barrón"},
