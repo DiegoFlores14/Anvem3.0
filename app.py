@@ -175,26 +175,31 @@ def clean_statement(df, quarter):
 def extract_net_payment_from_by_song(file_path):
     try:
         df = pd.read_excel(file_path, sheet_name="By Song", skiprows=8, dtype=str)
-        df = df.fillna('')  # Aseguramos que no haya NaNs
+        df = df.fillna('')  # Evita NaNs
 
         for i in range(len(df)):
             for j in range(len(df.columns)):
                 cell_value = str(df.iloc[i, j]).strip().lower()
-            if "net payment" in cell_value:
+                if "net payment" in cell_value:
+                    # Intentar valor en la celda siguiente
                     if j + 1 < len(df.columns):
                         value = df.iloc[i, j + 1]
-            else:
-                        value = df.iloc[i, j - 1] if j > 0 else ""
+                    # Si no hay celda siguiente, intentar en la anterior
+                    elif j > 0:
+                        value = df.iloc[i, j - 1]
+                    else:
+                        value = ""
 
-            value = str(value).replace(",", "").replace("$", "").strip()
-            try:
+                    value = str(value).replace(",", "").replace("$", "").strip()
+                    try:
                         return round(float(value), 2)
-            except:
+                    except:
                         return 0.0
-        return 0.0
+        return 0.0  # Si no encuentra nada
     except Exception as e:
         print(f"Error al extraer 'Net Payment' desde 'By Song': {e}")
         return 0.0
+
 
 def load_excel_data(artist, quarter, year):
     """Carga los datos del artista desde los archivos de Excel y los optimiza."""
@@ -266,14 +271,15 @@ def calculate_future_total(artist, selected_quarter, selected_year):
         if y == int(selected_year) and q <= int(selected_quarter):
             filename = f"{artist}T{q}-{selected_year}.xlsx"
             file_path = os.path.join(DATA_FOLDER, filename)
-        try:
+            try:
                 payment = extract_net_payment_from_by_song(file_path)
                 total += float(payment or 0)
-        except Exception as e:
+            except Exception as e:
                 print(f"Error leyendo archivo {filename}: {e}")
                 continue
 
     return round(total, 2)
+
 
 
 @app.route("/")
