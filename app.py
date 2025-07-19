@@ -167,7 +167,7 @@ def clean_statement(df, quarter):
         for j in range(df.shape[1] - 1):
             if re.search(r"total\s*royalties", str(df.iloc[i, j]).lower()):
                 try:
-                    total = float(str(df.iloc[i, j+1]).strip())
+                    total = float(str(df.iloc[i, j + 1]).strip())
                 except:
                     total = 0.0
     return total, 0
@@ -180,19 +180,16 @@ def extract_net_payment_from_by_song(file_path):
         for i in range(len(df)):
             for j in range(len(df.columns)):
                 cell_value = str(df.iloc[i, j]).strip().lower()
-                if "net payment" in cell_value:
-                    # Buscar en la columna siguiente
+            if "net payment" in cell_value:
                     if j + 1 < len(df.columns):
                         value = df.iloc[i, j + 1]
-                    else:
-                        # Si no hay columna a la derecha, intenta columna anterior
+            else:
                         value = df.iloc[i, j - 1] if j > 0 else ""
-                    
-                    # Convertir el valor extraído a número limpio
-                    value = str(value).replace(",", "").replace("$", "").strip()
-                    try:
+
+            value = str(value).replace(",", "").replace("$", "").strip()
+            try:
                         return round(float(value), 2)
-                    except:
+            except:
                         return 0.0
         return 0.0
     except Exception as e:
@@ -212,7 +209,7 @@ def load_excel_data(artist, quarter, year):
         return sheets_data
 
     try:
-        df_song = pd.read_excel(file_path, sheet_name="By Song", skiprows=8, nrows=11)  # Solo las primeras 10 canciones
+        df_song = pd.read_excel(file_path, sheet_name="By Song", skiprows=8, nrows=11)
         df_song_clean = clean_by_song(df_song)
         generate_song_bar_chart(df_song_clean)
         sheets_data["By Song"] = df_song_clean.to_html(
@@ -251,8 +248,7 @@ def load_excel_data(artist, quarter, year):
         sheets_data["By Source"] = f"<p style='color:red;'>Error 'By Source': {e}</p>"
 
     sheets_data["total_royalties"] = extract_net_payment_from_by_song(file_path)
-
-
+    
     return sheets_data
 
 
@@ -270,15 +266,14 @@ def calculate_future_total(artist, selected_quarter, selected_year):
         if y == int(selected_year) and q <= int(selected_quarter):
             filename = f"{artist}T{q}-{selected_year}.xlsx"
             file_path = os.path.join(DATA_FOLDER, filename)
-            try:
-                # Extraer el Net Payment desde la hoja "By Song"
+        try:
                 payment = extract_net_payment_from_by_song(file_path)
                 total += float(payment or 0)
-            except Exception as e:
+        except Exception as e:
                 print(f"Error leyendo archivo {filename}: {e}")
                 continue
 
-    return round(total, 2)  # Ya no se aplica el 10%
+    return round(total, 2)
 
 
 @app.route("/")
