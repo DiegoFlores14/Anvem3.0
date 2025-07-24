@@ -113,28 +113,38 @@ def clean_by_source(df):
 
 def generate_source_pie_chart(df):
     df_sorted = df.sort_values(by="Royalties", ascending=False)
+
     top5 = df_sorted.head(5)
     others = df_sorted.iloc[5:]
-    if not others.empty:
-        total_others = others["Royalties"].sum()
-        df_final = pd.concat([top5, pd.DataFrame([["Others", total_others]], columns=["Source", "Royalties"])], ignore_index=True)
+    total_others = others["Royalties"].sum()
+    total_val = df_sorted["Royalties"].sum()
+
+    # Incluir "Others" solo si representa más del 10%
+    if total_others / total_val >= 0.1:
+        df_final = pd.concat(
+            [top5, pd.DataFrame([["Others", total_others]], columns=["Source", "Royalties"])],
+            ignore_index=True
+        )
     else:
         df_final = top5
 
-    total_val = df_final["Royalties"].sum()
+    # Reordenar por Royalties para asegurar que el más grande esté primero
+    df_final = df_final.sort_values(by="Royalties", ascending=False).reset_index(drop=True)
+
     legend_labels = [
-        f"{src} - {royalty/total_val*100:.1f}%"
+        f"{src} - {royalty / df_final['Royalties'].sum() * 100:.1f}%"
         for src, royalty in zip(df_final["Source"], df_final["Royalties"])
     ]
 
     fig, ax = plt.subplots(figsize=(10, 8), facecolor='none')
     wedges, _ = ax.pie(
         df_final["Royalties"],
-        startangle=140,
+        startangle=90,  # Ángulo neutral para que el más grande quede arriba
         labels=None,
         wedgeprops=dict(edgecolor='white')
     )
     ax.axis('equal')
+
     plt.legend(
         wedges,
         legend_labels,
@@ -181,12 +191,13 @@ def extract_net_payment_from_by_song(file_path):
             for j in range(len(df.columns)):
                 cell_value = str(df.iloc[i, j]).strip().lower()
                 if "net payment" in cell_value:
-                    # Intentar valor en la celda siguiente
+                    
                     if j + 1 < len(df.columns):
                         value = df.iloc[i, j + 1]
-                    # Si no hay celda siguiente, intentar en la anterior
+                    
                     elif j > 0:
                         value = df.iloc[i, j - 1]
+                    
                     else:
                         value = ""
 
@@ -195,7 +206,7 @@ def extract_net_payment_from_by_song(file_path):
                         return round(float(value), 2)
                     except:
                         return 0.0
-        return 0.0  # Si no encuentra nada
+        return 0.0
     except Exception as e:
         print(f"Error al extraer 'Net Payment' desde 'By Song': {e}")
         return 0.0
