@@ -14,10 +14,10 @@ os.makedirs(GENERATED_FOLDER, exist_ok=True)
 USERS = {
 "PablitoOsorio": {"password": "Pablo159A", "artist": "Pablito Osorio"},
 "BadlyRouse": {"password": "Badly996", "artist": "Badly Rouse"},
-"CarlosRamirez": {"password": "Carlos600A", "artist": "Carlos Ramirez"},
+"CarlosRamirez": {"password": "Pyto", "artist": "Carlos Ramirez"},
 "Dazoner": {"password": "Dazoner300A", "artist": "Dazoner"},
 "FrankLuka": {"password": "Frank444A", "artist": "Frank Luka"},
-"Grupo360": {"password": "Grupo360A", "artist": "Grupo360"},
+"Grupo360": {"password": "Grupo360A", "artist": "Grupo 360"},
 "Los2dearriba": {"password": "Los2dearriba009A", "artist": "Los 2 de arriba"},
 "LosDragonesdeSinaloa": {"password": "Dragones663A", "artist": "Los Dragones de Sinaloa"},
 "PanchitoRenteria": {"password": "Panchito350A", "artist": "Panchito Renteria"},
