@@ -12,7 +12,7 @@ os.makedirs(GENERATED_FOLDER, exist_ok=True)
 
 # Usuarios y sus artistas (conserva la estructura original)
 USERS = {
-"PabloOsorio": {"password": "Pablo159A", "artist": "Pablo Osorio"},
+"PablitoOsorio": {"password": "Pablo159A", "artist": "Pablito Osorio"},
 "BadlyRouse": {"password": "Badly996", "artist": "Badly Rouse"},
 "CarlosRamirez": {"password": "Carlos600A", "artist": "Carlos Ramirez"},
 "Dazoner": {"password": "Dazoner300A", "artist": "Dazoner"},
