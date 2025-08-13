@@ -1,10 +1,81 @@
+# Entornos virtuales
+.venv/
+env/
 venv/
+ENV/
+env.bak/
+venv.bak/
+instance/
+
+# Archivos Python compilados
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-instance/
-.env
-*.sqlite3
+*.py[cod]
+*$py.class
+
+# Logs y bases de datos
 *.log
+*.sqlite3
+db.sqlite3
+db.sqlite3-journal
+
+# Configuración local
+.env
+local_settings.py
+
+# Archivos del sistema
 .DS_Store
+
+# Archivos de testing
+.tox/
+.pytest_cache/
+.coverage
+coverage.xml
+*.cover
+.hypothesis/
+
+# Archivos de Jupyter
+.ipynb_checkpoints
+
+# Caches
+.cache
+.mypy_cache/
+.dmypy.json
+.pytype/
+.pyre/
+.ruff_cache/
+
+# Build
+build/
+dist/
+*.egg-info/
+.eggs/
+*.egg
+*.spec
+MANIFEST
+
+# IDEs
+.ropeproject
+.spyderproject
+.spyproject
+.idea/
+.vscode/
+
+# Otros
+.Python
+.webassets-cache
+site
+docs/_build/
+develop-eggs/
+downloads/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+.installed.cfg
+target/
