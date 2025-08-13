@@ -12,62 +12,18 @@ os.makedirs(GENERATED_FOLDER, exist_ok=True)
 
 # Usuarios y sus artistas (conserva la estructura original)
 USERS = {
-    "GerardoTorres": {"password": "Gerardo444A", "artist": "Gerardo Torres"},
-    "PabloOsorio": {"password": "Pablo159A", "artist": "Pablo Osorio"},
-    "AlanMijes": {"password": "Alan247A", "artist": "Alan Mijes"},
-    "JoseCaro": {"password": "Caro324A", "artist": "Jose Caro"},
-    "ANVEMP": {"password": "ANVEM111A", "artist": "ANVEM PUBLISHING"},
-    "ANVEML": {"password": "ANVEM222A", "artist": "ANVEM LYRICS"},
-    "ANVEMT": {"password": "ANVEM333A", "artist": "ANVEM TUNES"},
-    "AngelRodriguez": {"password": "Angel758A", "artist": "Angel Rodriguez"},
-    "ChristianMorales": {"password": "Christian467A", "artist": "Christian Morales"},
-    "ErickGutierrez": {"password": "Erick178A", "artist": "Erick Gutiérrez"},
-    "IsauroMolinos": {"password": "Isauro999A", "artist": "Isauro Molinos"},
-    "JoseOlivas": {"password": "Jose412A", "artist": "José Olivas"},
-    "JoseRomero": {"password": "Jose223A", "artist": "José Romero"},
-    "JuanLimon": {"password": "Juan111A", "artist": "Juan Limon"},
-    "JulianMercado": {"password": "Julian657A", "artist": "Julián Mercado"},
-    "MacarioCarvajal": {"password": "Macario963A", "artist": "Macario Carvajal"},
-    "MichelCruz": {"password": "Michel582A", "artist": "Michel Cruz"},
-    "OscarRegalado": {"password": "Oscar333A", "artist": "Oscar Regalado"},
-    "RodrigoFlores": {"password": "Rodrigo741A", "artist": "Rodrigo Flores"},
-    "AnvemT": {"password": "Anvem123A", "artist": "ANVEMTUNES"},
-    "AnvemL": {"password": "Anvem321A", "artist": "ANVEM LYRICS"},
-    "AnvemP": {"password": "Anvem213A", "artist": "ANVEM PUBLISHING"},
-    "DanielNava": {"password": "Daniel874A", "artist": "Daniel Nava"},
-    "DanielFuentes": {"password": "Daniel777A", "artist": "Daniel Fuentes"},
-    "DenilsonJaramillo": {"password": "Denilson145A", "artist": "Denilson Jaramillo"},
-    "FelipeManzanares": {"password": "Felipe654A", "artist": "Felipe Manzanares"},
-    "FernandoRivas": {"password": "Fernando888A", "artist": "Fernando Rivas"},
-    "FidelValenzuela": {"password": "Fidel547A", "artist": "Fidel Valenzuela"},
-    "GaliaOrtiz": {"password": "Galia912A", "artist": "Galia Ortiz"},
-    "JadielJaramillo": {"password": "Jadiel487A", "artist": "Jadiel Jaramillo"},
-    "JoseCastro": {"password": "Castro479A", "artist": "Jose Castro"},
-    "MarcoMendoza": {"password": "Marco845A", "artist": "Marco Mendoza"},
-    "MisaelSanchez": {"password": "Misael845A", "artist": "Misael Sanchez"},
-    "PaulinoSalazar": {"password": "Paulino663A", "artist": "Paulino Salazar"},
-    "SergioEspinoza": {"password": "Sergio332A", "artist": "Sergio Espinoza"},
-    "VictorGarcia": {"password": "Victor143A", "artist": "Victor Garcia"},
-    "EmilianoMorales": {"password": "Emiliano917A", "artist": "Emiliano Morales"},
-    "ErickPaez": {"password": "Erick555A", "artist": "Erick Paez"},
-    "GustavoCastillo": {"password": "Gustavo872A", "artist": "Gustavo Castillo"},
-    "PabloRodriguez": {"password": "Pablo657A", "artist": "Pablo Rodriguez"},
-    "MarcoPadilla": {"password": "Padilla431A", "artist": "Marco Padilla"},
-    "EduardoOveso": {"password": "Eduardo678A", "artist": "Eduardo Oveso"},
-    "OmarAnaya": {"password": "Omar712A", "artist": "Omar Anaya"},
-    "OscarFlores": {"password": "Oscar441A", "artist": "Oscar Flores"},
-    "PaulinaServin": {"password": "Paulina478A", "artist": "Paulina Servin"},
-    "RamonCumea": {"password": "Ramon614A", "artist": "Ramon Cuamea"},
-    "VictorValdez": {"password": "Valdez455A", "artist": "Victor Valdez"},
-    "DavidOrlando": {"password": "Orlando731A", "artist": "David Loya"},
-    "EduardoGurrola": {"password": "Gurrola558A", "artist": "Eduardo Gurrola"},
-    "PedroVilla": {"password": "Pedro111A", "artist": "Pedro Villa"},
-    "SamanthaBarron": {"password": "Samantha123A", "artist": "Samantha Barrón"},
-    "CarlosRamirez": {"password": "Carlos613A", "artist": "Carlos Ramirez"},
-    "DavidLoya": {"password": "David676A", "artist": "David Loya"},
-    "JuanLugo": {"password": "Juan442A", "artist": "Juan Lugo"},
-    "MecsaSosa": {"password": "Mecsa212A", "artist": "Mecsa Sosa"},
-    "DashboardPrueba": {"password": "Password", "artist": "DashboardPrueba"}
+"PabloOsorio": {"password": "Pablo159A", "artist": "Pablo Osorio"},
+"BadlyRouse": {"password": "Badly996", "artist": "Badly Rouse"},
+"CarlosRamirez": {"password": "Carlos600A", "artist": "Carlos Ramirez"},
+"Dazoner": {"password": "Dazoner300A", "artist": "Dazoner"},
+"FrankLuka": {"password": "Frank444A", "artist": "Frank Luka"},
+"Grupo360": {"password": "Grupo360A", "artist": "Grupo360"},
+"Los2dearriba": {"password": "Los2dearriba009A", "artist": "Los 2 de arriba"},
+"LosDragonesdeSinaloa": {"password": "Dragones663A", "artist": "Los Dragones de Sinaloa"},
+"PanchitoRenteria": {"password": "Panchito350A", "artist": "Panchito Renteria"},
+"Villa5": {"password": "Villa888A", "artist": "Villa 5"},
+"WilCaro": {"password": "WilCaro100A", "artist": "Wil Caro"},
+"MichelCruz": {"password": "Michel582A", "artist": "Michel Cruz"},
 }
 
 # Palabras clave para búsqueda de columnas
@@ -77,10 +33,18 @@ POSSIBLE_SOURCE_KEYWORDS = ["source", "fuente", "plataforma"]
 
 # Diccionario para rango de meses según trimestre (sin cambios)
 QUARTER_RANGES = {
-    "1": "01 JAN - 31 MAR",
-    "2": "01 APR - 30 JUN",
-    "3": "01 JUL - 30 SEP",
-    "4": "01 OCT - 31 DEC"
+    "1": "01 JAN - 31 JAN",
+    "2": "01 FEB - 28 FEB",
+    "3": "01 MAR - 31 MAR",
+    "4": "01 APR - 30 APR",
+    "5": "01 MAY - 31 MAY",
+    "6": "01 JUN - 30 JUN",
+    "7": "01 JUL - 31 JUL",
+    "8": "01 AUG - 31 AUG",
+    "9": "01 SEP - 30 SEP",
+    "10": "01 OCT - 30 OCT",
+    "11": "01 NOV - 30 NOV",
+    "12": "01 DEC - 31 DEC"
 }
 
 def find_column(df, keywords, fallback_to_first=True):
@@ -94,6 +58,7 @@ def clean_by_song(df):
     title_col = find_column(df, POSSIBLE_TITLE_KEYWORDS)
     royalties_col = find_column(df, POSSIBLE_ROYALTIES_KEYWORDS)
     df = df[[title_col, royalties_col]].copy()
+    df[title_col] = df[title_col].str.upper()  # <-- convierte a mayúsculas
     df.columns = ["Song", "Royalties"]
     df.dropna(subset=["Song"], inplace=True)
     df = df[~df["Song"].str.contains("TOTAL", case=False, na=False)]
@@ -181,6 +146,26 @@ def clean_statement(df, quarter):
                 except:
                     total = 0.0
     return total, 0
+
+def generate_balance_bar_chart(future_total, investment, balance):
+    labels = ["Total Royalties", "Investment", "Balance"]
+    values = [future_total, investment if isinstance(investment, (int, float)) else 0, balance if balance else 0]
+    colors = ["#4CAF50", "#F44336", "#2196F3"]
+
+    fig, ax = plt.subplots(figsize=(6, 4), facecolor='none')
+    bars = ax.bar(labels, values, color=colors)
+
+    # Mostrar valores arriba de las barras
+    for bar in bars:
+        yval = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2.0, yval + 0.5, f"${yval:.2f}", ha="center", va="bottom")
+
+    ax.set_ylabel("USD")
+    ax.set_title("Balance General")
+    plt.tight_layout()
+
+    plt.savefig(os.path.join(GENERATED_FOLDER, "balance_bar_chart.png"), transparent=True)
+    plt.close()
 
 def extract_net_payment_from_by_song(file_path):
     try:
@@ -291,6 +276,31 @@ def calculate_future_total(artist, selected_quarter, selected_year):
 
     return round(total, 2)
 
+def get_investment_amount(quarter, year):
+    investment_file = os.path.join(DATA_FOLDER, "inversion.xlsx")
+    
+    if not os.path.exists(investment_file):
+        return "No se han realizado inversiones"
+
+    try:
+        df = pd.read_excel(investment_file)
+        df.columns = [str(col).strip().lower() for col in df.columns]
+
+        # Buscar coincidencias por año y trimestre
+        match = df[
+            (df["año"] == int(year)) &
+            (df["trimestre"] == int(quarter))
+        ]
+
+        if not match.empty:
+            amount = match.iloc[0]["inversión"]
+            return round(float(amount), 2)
+        else:
+            return "No se han realizado inversiones"
+    except Exception as e:
+        print(f"Error leyendo inversión: {e}")
+        return "No se han realizado inversiones"
+
 
 
 @app.route("/")
@@ -352,8 +362,18 @@ def load_dashboard_data():
     artist = USERS[session["user"]]["artist"]
     selected_year = request.args.get("year")
     selected_quarter = request.args.get("quarter")
+
     sheets_data = load_excel_data(artist, selected_quarter, selected_year)
     future_total = calculate_future_total(artist, selected_quarter, selected_year)
+    investment = get_investment_amount(selected_quarter, selected_year)
+
+    # Verifica si la inversión es numérica antes de calcular el balance
+    if isinstance(investment, (int, float)):
+        balance = round(future_total - investment, 2)
+    else:
+        balance = None
+
+    generate_balance_bar_chart(future_total, investment, balance)
     quarter_key = selected_quarter.replace("T", "")
     quarter_range = QUARTER_RANGES.get(quarter_key, "Desconocido")
 
@@ -364,8 +384,11 @@ def load_dashboard_data():
             "total_royalties": sheets_data["total_royalties"]
         },
         "future_total": future_total,
+        "investment": investment,
+        "balance": balance,
         "quarter_dates": f"{quarter_range} {selected_year}"
     }
+
 
 @app.route("/download_statement")
 def download_statement():

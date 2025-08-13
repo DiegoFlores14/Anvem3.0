@@ -18,6 +18,22 @@
   </style>
 
   <style>
+    .positive-balance {
+  color: #006400;
+}
+
+.negative-balance {
+  color: #8B0000;
+}
+
+.info-muted {
+  color: #849A9F;
+}
+
+.bg-soft {
+  background-color: #EDEBE6;
+}
+
     body {
       margin: 0;
       padding: 0;
@@ -383,7 +399,7 @@
         </select>
         <select name="quarter" class="form-select form-select-sm" onchange="this.form.submit()">
           {% for q in available_quarters %}
-            <option value="{{ q }}" {% if selected_quarter == q %}selected{% endif %}>T{{ q }}</option>
+            <option value="{{ q }}" {% if selected_quarter == q %}selected{% endif %}>M{{ q }}</option>
           {% endfor %}
         </select>
       </form>
@@ -408,7 +424,7 @@
    <div class="left-col order-2 order-md-1">
     
     <div class="stat-box">
-      <div class="stat-box-header">Royalties T{{ selected_quarter }}</div>
+      <div class="stat-box-header">Royalties M{{ selected_quarter }}</div>
       <div class="stat-box-body" id="royalties-value">Cargando...</div>
     </div>
     
@@ -468,6 +484,40 @@
   </div>
 </div>
 
+<div class="card mt-4">
+  <div class="card-header text-white bg-dark">
+    Balance General
+  </div>
+  <div class="card-body">
+    <table class="table table-borderless mb-0 text-center align-middle">
+      <tbody>
+        <tr>
+          <td><strong>Ganancias Generadas</strong></td>
+          <td id="ganancia">-</td>
+        </tr>
+        <tr>
+          <td><strong>Inversión</strong></td>
+          <td id="inversion" class="text-break">-</td>
+        </tr>
+        <tr>
+          <td><strong>Balance</strong></td>
+          <td id="balance" class="fw-bold">-</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Gráfico de barras para balance general -->
+    <div class="text-center mt-4">
+      <img src="{{ url_for('static', filename='generated/balance_bar_chart.png') }}" 
+           alt="Gráfico Balance General" 
+           class="img-fluid" 
+           style="max-width: 400px;">
+    </div>
+  </div>
+</div>
+
+
+
   </div>
 
   <footer class="text-center py-3">
@@ -518,38 +568,67 @@
   <script>
     document.addEventListener("DOMContentLoaded", loadDashboardData);
   
-    function loadDashboardData() {
-      const year = "{{ selected_year }}";
-      const quarter = "{{ selected_quarter }}";
-  
-      fetch(`/load_dashboard_data?year=${year}&quarter=${quarter}`)
-        .then(response => response.json())
-        .then(data => {
-          // Royalties
-          const royaltiesEl = document.getElementById("royalties-value");
-          royaltiesEl.textContent = `$${parseFloat(data.sheets.total_royalties).toFixed(2)}`;
-  
-          // Total Earned
-          const totalEl = document.getElementById("total-earned-value");
-          totalEl.textContent = `$${parseFloat(data.future_total).toFixed(2)}`;
-  
-          // Quarter Dates
-          const qd = document.getElementById("quarter-dates");
-          qd.textContent = data.quarter_dates;
-  
-          // Tabla por canción
-          const songTable = document.getElementById("song-table");
-          songTable.innerHTML = data.sheets.by_song;
-  
-          // Tabla por fuente
-          const sourceTable = document.getElementById("source-table");
-          sourceTable.innerHTML = data.sheets.by_source;
-        })
-        .catch(err => {
-          console.error("Error cargando datos:", err);
-          alert("Error al cargar el dashboard. Intenta más tarde.");
-        });
-    }
+  function loadDashboardData() {
+  const year = "{{ selected_year }}";
+  const quarter = "{{ selected_quarter }}";
+
+  fetch(`/load_dashboard_data?year=${year}&quarter=${quarter}`)
+    .then(response => response.json())
+    .then(data => {
+      // Ganancia generada
+      document.getElementById("ganancia").textContent = data.future_total.toFixed(2) + " USD";
+
+      // Inversión y Balance
+      const inversionElem = document.getElementById("inversion");
+      const balanceElem = document.getElementById("balance");
+
+      if (typeof data.investment === "string") {
+        inversionElem.textContent = data.investment; // mensaje como "No se han realizado inversiones"
+        balanceElem.textContent = "N/A";
+        balanceElem.style.color = "gray";
+      } else {
+        inversionElem.textContent = data.investment.toFixed(2) + " USD";
+        balanceElem.textContent = data.balance.toFixed(2) + " USD";
+        balanceElem.style.color = data.balance >= 0 ? "green" : "red";
+      }
+
+      // Royalties
+      const royaltiesEl = document.getElementById("royalties-value");
+      royaltiesEl.textContent = `$${parseFloat(data.sheets.total_royalties).toFixed(2)}`;
+
+      // Total Earned
+      const totalEl = document.getElementById("total-earned-value");
+      totalEl.textContent = `$${parseFloat(data.future_total).toFixed(2)}`;
+
+      // Quarter Dates
+      const qd = document.getElementById("quarter-dates");
+      qd.textContent = data.quarter_dates;
+
+      // Tabla por canción
+      const songTable = document.getElementById("song-table");
+      songTable.innerHTML = data.sheets.by_song;
+
+      // Tabla por fuente
+      const sourceTable = document.getElementById("source-table");
+      sourceTable.innerHTML = data.sheets.by_source;
+    })
+    .catch(err => {
+      console.error("Error cargando datos:", err);
+      alert("Error al cargar el dashboard. Intenta más tarde.");
+    });
+}
+
+
+    if (typeof data.investment === "string") {
+  inversionElem.textContent = data.investment;
+  balanceElem.textContent = "N/A";
+  balanceElem.style.color = "gray";
+} else {
+  inversionElem.textContent = data.investment.toFixed(2) + " USD";
+  balanceElem.textContent = data.balance.toFixed(2) + " USD";
+  balanceElem.style.color = data.balance >= 0 ? "green" : "red";
+}
+
   </script>
   
 </body>
