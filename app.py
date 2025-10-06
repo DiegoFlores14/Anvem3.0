@@ -3,12 +3,18 @@ import re
 import pandas as pd
 import matplotlib.pyplot as plt
 from flask import Flask, render_template, request, session, redirect, url_for, send_file
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from datetime import timedelta
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 app.secret_key = "clave_secreta"  # Ajusta tu clave segura según lo necesites
 DATA_FOLDER = os.path.join(app.root_path, "data")
 GENERATED_FOLDER = os.path.join(app.root_path, "static", "generated")
 os.makedirs(GENERATED_FOLDER, exist_ok=True)
+app.permanent_session_lifetime = timedelta(minutes=30)  # Expira a los 30 min
 
 # Usuarios y sus artistas (conserva la estructura original)
 USERS = {
@@ -24,6 +30,7 @@ USERS = {
 "Villa5": {"password": "Villa888A", "artist": "Villa 5"},
 "WilCaro": {"password": "WilCaro100A", "artist": "Wil Caro"},
 "MichelCruz": {"password": "Michel582A", "artist": "Michel Cruz"},
+"AdminUser": {"password": "Admin123", "is_admin": True}
 }
 
 # Palabras clave para búsqueda de columnas
@@ -123,6 +130,56 @@ def generate_source_pie_chart(df):
     plt.tight_layout()
     plt.savefig(os.path.join(GENERATED_FOLDER, "source_pie_chart.png"), transparent=True)
     plt.close()
+
+def load_admin_summary(quarter, year):
+    filename = f"resumen_por_artista_T{quarter}-{year}.xlsx"
+    file_path = os.path.join(DATA_FOLDER, filename)
+    summary_data = {}
+
+    print(f"DEBUG: Intentando abrir archivo: {file_path}")
+    if not os.path.exists(file_path):
+        print(f"DEBUG: Archivo no encontrado: {file_path}")
+        summary_data["Resumen"] = "<p style='color:red;'>Archivo no encontrado.</p>"
+        summary_data["total"] = 0.0
+        return summary_data
+
+    try:
+        df = pd.read_excel(file_path, dtype={"Artista Normalizado": str, "Your Earnings": float})
+        print(f"DEBUG: Archivo leído correctamente, filas: {len(df)}")
+         # Ver columnas luego de renombrar
+        print(f"DEBUG load_admin_summary: Columnas originales: {df.columns}")
+        
+        # Pasar columnas a minúsculas
+        df.columns = [str(col).strip().lower() for col in df.columns]
+        print(f"DEBUG load_admin_summary: Columnas en minúsculas: {df.columns}")
+        # Renombrar columnas con nombres en minúsculas
+        df.rename(columns={"artista normalizado": "artist", "your earnings": "royalties"}, inplace=True)
+        print(f"DEBUG load_admin_summary: Columnas renombradas: {df.columns}")
+        df["royalties"] = pd.to_numeric(df["royalties"], errors="coerce").fillna(0)
+        df = df.sort_values(by="royalties", ascending=False)
+        print(f"DEBUG load_admin_summary: Total de royalties: {df['royalties'].sum()}")
+
+
+        summary_data["Resumen"] = df.to_html(
+            index=False,
+            border=0,
+            float_format="%.2f",
+            classes="table table-transparent text-center align-middle",
+            formatters={
+                "artist": lambda x: f'<td style="text-align: left;">{x.title()}</td>',
+                "royalties": lambda x: f'<td style="text-align: right;">{x:.2f}</td>'
+            },
+            escape=False
+        )
+
+        summary_data["total"] = round(df["royalties"].sum(), 2)
+
+    except Exception as e:
+        print(f"DEBUG: Error al procesar el archivo: {e}")
+        summary_data["Resumen"] = f"<p style='color:red;'>Error al procesar resumen: {e}</p>"
+        summary_data["total"] = 0.0
+
+    return summary_data
 
 def generate_song_bar_chart(df):
     df_sorted = df.sort_values(by="Royalties", ascending=False).head(10)
@@ -307,41 +364,113 @@ def get_investment_amount(quarter, year):
 def index():
     return redirect(url_for("login"))
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        if username in USERS and USERS[username]["password"] == password:
-            session["user"] = username
-            return redirect(url_for("dashboard"))
-    return render_template("login.html")
+    session.permanent = True
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        user = USERS.get(username)
+        if user and user['password'] == password:
+            session['user'] = username
+            session['username'] = username
+            session['is_admin'] = user.get('is_admin', False)
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Usuario o contraseña incorrectos')
+            return redirect(url_for('login'))
+
+    return render_template('login.html')
 
 @app.route("/logout")
 def logout():
-    session.pop("user", None)
-    return redirect(url_for("login"))
+    session.clear()  # Elimina TODO lo guardado en sesión
+    response = redirect(url_for("login"))
+
+    # Añadir headers para evitar que el navegador guarde páginas privadas
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, private, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+
+    return response
+
 
 @app.route("/dashboard")
 def dashboard():
     if "user" not in session:
         return redirect(url_for("login"))
-
-    user_info = USERS.get(session["user"])
-    artist = user_info["artist"]
-    artist_name = user_info.get("name", artist)  # por si tienes un nombre bonito
+    
+    username = session["user"]
+    user_info = USERS.get(username)
+    artist = user_info.get("artist", username)
+    artist_name = user_info.get("name", artist)
     artist_image = f"images/{artist}.jpg"
+    is_admin = session.get("is_admin", False)
 
-    # Obtener los archivos disponibles
+    
     all_files = os.listdir(DATA_FOLDER)
     pattern = re.compile(re.escape(artist) + r"T(\d)-(\d{4})\.xlsx")
     matched = [m for m in (pattern.match(f) for f in all_files) if m]
 
-    # Obtener años y trimestres disponibles
+
     available_years = sorted(set(m.group(2) for m in matched))
     selected_year = request.args.get("year") or (available_years[-1] if available_years else "2024")
     available_quarters = sorted(set(m.group(1) for m in matched if m.group(2) == selected_year), reverse=True)
     selected_quarter = request.args.get("quarter") or (available_quarters[0] if available_quarters else "1")
+
+    if is_admin:
+        selected_artist_key = request.args.get("artist")
+        if not selected_artist_key:
+            selected_artist_key = "all"
+
+        if selected_artist_key == "all":
+            artist_file_key = "resumen_por_artista_"
+            artist_name = "Resumen General"
+            image_filename = "resumen_general.png"
+        else:
+            selected_user_info = USERS.get(selected_artist_key, {})
+            artist_file_key = selected_user_info.get("artist", selected_artist_key)
+            artist_name = artist_file_key
+            image_filename = f"{artist_file_key}.jpg"
+
+        image_path = os.path.join("static", "images", image_filename)
+        artist_image = image_path if os.path.exists(image_path) else "images/default.jpg"
+        available_artists = ["all"] + [k for k in USERS if k != "AdminUser"]
+
+    else:
+        selected_artist_key = username
+        artist_file_key = user_info.get("artist", selected_artist_key)
+        artist_name = artist_file_key
+        image_filename = f"{artist_file_key}.jpg"
+
+        image_path = os.path.join("static", "images", image_filename)
+        artist_image = f"images/{image_filename}" if os.path.exists(image_path) else "images/default.jpg"
+        available_artists = []
+
+    all_files = os.listdir(DATA_FOLDER)
+
+    if selected_artist_key == "all":
+        pattern = re.compile(r"resumen_por_artista_T(\d)-(\d{4})\.xlsx")
+    else:
+        pattern = re.compile(re.escape(artist_file_key) + r"T(\d)-(\d{4})\.xlsx")
+
+    matched = [m for m in (pattern.match(f) for f in all_files) if m]
+
+    available_years = sorted(set(m.group(2) for m in matched))
+    selected_year = request.args.get("year") or (available_years[-1] if available_years else "2024")
+    available_quarters = sorted(
+        set(m.group(1) for m in matched if m.group(2) == selected_year),
+        reverse=True
+    )
+    selected_quarter = request.args.get("quarter") or (available_quarters[0] if available_quarters else "1")
+    
+    print(f"DEBUG dashboard: Usuario: {username}, Admin: {is_admin}")
+    print(f"DEBUG dashboard: Artista seleccionado: {selected_artist_key}")
+    print(f"DEBUG dashboard: Artist file key: {artist_file_key}")
+    print(f"DEBUG dashboard: Años disponibles: {available_years}")
+    print(f"DEBUG dashboard: Trimestres disponibles: {available_quarters}")
 
     return render_template(
         "dashboard.html",
@@ -350,57 +479,98 @@ def dashboard():
         selected_year=selected_year,
         selected_quarter=selected_quarter,
         available_years=available_years,
-        available_quarters=available_quarters
+        available_quarters=available_quarters,
+        available_artists=available_artists,
+        selected_artist_key=selected_artist_key,
+        is_admin=is_admin,
+        USERS=USERS  # <-- ✅ AQUI está el FIX
     )
 
 
+
+from flask import jsonify
+
 @app.route("/load_dashboard_data")
 def load_dashboard_data():
-    if "user" not in session:
-        return {"error": "Unauthorized"}, 401
+    try:
+        selected_artist_key = request.args.get("artist")
+        print(f"DEBUG load_dashboard_data: Usuario: {session.get('user')}, Admin: {session.get('is_admin')}, selected_artist_key: {selected_artist_key}")
 
-    artist = USERS[session["user"]]["artist"]
-    selected_year = request.args.get("year")
-    selected_quarter = request.args.get("quarter")
+        if "user" not in session:
+            return jsonify({"error": "Unauthorized"}), 401
 
-    sheets_data = load_excel_data(artist, selected_quarter, selected_year)
-    future_total = calculate_future_total(artist, selected_quarter, selected_year)
-    investment = get_investment_amount(selected_quarter, selected_year)
+        # Determinar el artista a usar
+        if session.get("is_admin", False) and selected_artist_key == "all":
+            # Si es admin y pide ver todos, usar el resumen general
+            artist = "resumen_por_artista_"
+        else:
+            # Caso normal (admin viendo artista específico o usuario normal)
+            if selected_artist_key and selected_artist_key != "all":
+                artist = USERS.get(selected_artist_key, {}).get("artist", selected_artist_key)
+            else:
+                artist = USERS.get(session["user"], {}).get("artist")
+                if artist is None:
+                    artist = session["user"]
 
-    # Verifica si la inversión es numérica antes de calcular el balance
-    if isinstance(investment, (int, float)):
-        balance = round(future_total - investment, 2)
-    else:
-        balance = None
+        print(f"DEBUG load_dashboard_data: Artista para carga: {artist}")
+        selected_year = request.args.get("year")
+        selected_quarter = request.args.get("quarter")
+        print(f"DEBUG load_dashboard_data: Year: {selected_year}, Quarter: {selected_quarter}")
 
-    generate_balance_bar_chart(future_total, investment, balance)
-    quarter_key = selected_quarter.replace("T", "")
-    quarter_range = QUARTER_RANGES.get(quarter_key, "Desconocido")
+        # Cargar datos desde Excel
+        sheets_data = load_excel_data(artist, selected_quarter, selected_year)
+        future_total = calculate_future_total(artist, selected_quarter, selected_year)
+        investment = get_investment_amount(selected_quarter, selected_year)
 
-    return {
-        "sheets": {
-            "by_song": sheets_data["By Song"],
-            "by_source": sheets_data["By Source"],
-            "total_royalties": sheets_data["total_royalties"]
-        },
-        "future_total": future_total,
-        "investment": investment,
-        "balance": balance,
-        "quarter_dates": f"{quarter_range} {selected_year}"
-    }
+        # Calcular balance
+        balance = round(future_total - investment, 2) if isinstance(investment, (int, float)) else None
+
+        # Generar gráfico de balance
+        generate_balance_bar_chart(future_total, investment, balance)
+
+        # Obtener rango de fechas del trimestre
+        quarter_key = selected_quarter.replace("T", "")
+        quarter_range = QUARTER_RANGES.get(quarter_key, "Desconocido")
+
+        # Devolver respuesta JSON al frontend
+        return jsonify({
+            "sheets": {
+                "by_song": sheets_data["By Song"],
+                "by_source": sheets_data["By Source"],
+                "total_royalties": sheets_data["total_royalties"]
+            },
+            "future_total": future_total,
+            "investment": investment,
+            "balance": balance,
+            "quarter_dates": f"{quarter_range} {selected_year}"
+        })
+
+    except Exception as e:
+        print(f"[ERROR en /load_dashboard_data]: {e}")
+        return jsonify({"error": "Error interno del servidor"}), 500
 
 
 @app.route("/download_statement")
 def download_statement():
     if "user" not in session:
         return redirect(url_for("login"))
-    artist = USERS[session["user"]]["artist"]
+
+    # Obtener datos del usuario de forma segura
+    user_data = USERS.get(session["user"], {})
+    artist = user_data.get("artist", session["user"])  # fallback al nombre de usuario si no hay 'artist'
+
+    # Obtener parámetros de la URL
     quarter = request.args.get("quarter")
     year = request.args.get("year")
+
+    # Construir nombre del archivo
     filename = f"{artist}A{quarter}-{year}.xlsx"
     file_path = os.path.join(DATA_FOLDER, filename)
+
+    # Verificar si el archivo existe
     if os.path.exists(file_path):
         return send_file(file_path, as_attachment=True)
+
     return "Archivo no encontrado", 404
 
 if __name__ == "__main__":

@@ -6,17 +6,7 @@
   <title>Dashboard - {{ artist_name }}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
-  <!-- Carga la fuente Futura Std -->
-  <style>
-    @font-face {
-      font-family: 'Futura Std';
-      src: url("{{ url_for('static', filename='fonts/FuturaStd.woff2') }}") format('woff2'),
-           url("{{ url_for('static', filename='fonts/FuturaStd.woff') }}") format('woff');
-      font-weight: normal;
-      font-style: normal;
-    }
-  </style>
-
+  
   <style>
     .positive-balance {
   color: #006400;
@@ -389,27 +379,64 @@
     </div>
   </header>
 
+ 
   <div class="main-container">
-    <div class="row-quarter-info">
-      <form method="GET" action="{{ url_for('dashboard') }}" class="quarter-select">
-        <select name="year" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width: 100px;">
-          {% for y in available_years %}
-            <option value="{{ y }}" {% if selected_year == y %}selected{% endif %}>{{ y }}</option>
+  <div class="row-quarter-info">
+    <form method="GET" action="{{ url_for('dashboard') }}" class="quarter-select">
+
+      {# Si es admin, mostrar selector de artista #}
+      {% if available_artists %}
+        <select name="artist" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width: 120px;">
+          {% for key in available_artists %}
+            <option value="{{ key }}" {% if key == selected_artist_key %}selected{% endif %}>
+              {% if key == 'all' %}
+                Resumen General
+              {% else %}
+                {{ USERS[key].name if USERS[key] is defined and USERS[key].name else key }}
+              {% endif %}
+            </option>
           {% endfor %}
         </select>
-        <select name="quarter" class="form-select form-select-sm" onchange="this.form.submit()">
-          {% for q in available_quarters %}
-            <option value="{{ q }}" {% if selected_quarter == q %}selected{% endif %}>M{{ q }}</option>
-          {% endfor %}
-        </select>
-      </form>
-      <div class="quarter-label-box">
-        <!-- EN ESTA PARTE VA EL AÑO ARRIBA Y LOS MESES ABAJO -->
-<div class="quarter-label">{{ selected_year }}</div>
-<div class="quarter-dates" id="quarter-dates">Cargando fechas...</div>
-</div>
-<a href="{{ url_for('download_statement', quarter=selected_quarter, year=selected_year) }}" class="btn btn-outline-dark btn-sm">DOWNLOAD STATEMENT</a>
-</div>
+      {% endif %}
+
+      {# Selector de año #}
+      <select name="year" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width: 100px;">
+        {% for y in available_years %}
+          <option value="{{ y }}" {% if selected_year == y %}selected{% endif %}>{{ y }}</option>
+        {% endfor %}
+      </select>
+
+      {# Selector de trimestre #}
+      <select name="quarter" class="form-select form-select-sm" onchange="this.form.submit()">
+        {% for q in available_quarters %}
+          <option value="{{ q }}" {% if selected_quarter == q %}selected{% endif %}>M{{ q }}</option>
+        {% endfor %}
+      </select>
+    </form>
+
+    <div class="quarter-label-box">
+      <div class="quarter-label">{{ selected_year }}</div>
+      <div class="quarter-dates" id="quarter-dates">Cargando fechas...</div>
+    </div>
+
+    <a href="{{ url_for('download_statement', quarter=selected_quarter, year=selected_year) }}" class="btn btn-outline-dark btn-sm">DOWNLOAD STATEMENT</a>
+  </div>
+
+  {# Sección de resumen solo para AdminUser #}
+  {% if selected_artist_key == 'AdminUser' %}
+    <div class="bottom-box mt-4">
+      <div class="bottom-box-header">Resumen por Artista</div>
+      <div id="summary-table">
+        <!-- JS lo llenará dinámicamente -->
+      </div>
+      <div class="text-end mt-2">
+        <strong>Total General:</strong> <span id="summary-total">-</span> USD
+      </div>
+    </div>
+  {% endif %}
+
+
+      
 
 <div class="row-upper">
   <!-- Imagen del artista: primero en móvil, segundo en escritorio -->
@@ -568,11 +595,12 @@
   <script>
     document.addEventListener("DOMContentLoaded", loadDashboardData);
   
-  function loadDashboardData() {
+ function loadDashboardData() {
   const year = "{{ selected_year }}";
   const quarter = "{{ selected_quarter }}";
+  const artist = "{{ selected_artist_key }}";
 
-  fetch(`/load_dashboard_data?year=${year}&quarter=${quarter}`)
+  fetch(`/load_dashboard_data?year=${year}&quarter=${quarter}&artist=${artist}`)
     .then(response => response.json())
     .then(data => {
       // Ganancia generada
@@ -581,6 +609,15 @@
       // Inversión y Balance
       const inversionElem = document.getElementById("inversion");
       const balanceElem = document.getElementById("balance");
+
+      // Si es AdminUser, mostrar resumen
+      if ("summary_table" in data) {
+       const resumenEl = document.getElementById("summary-table");
+       const totalEl = document.getElementById("summary-total");
+
+       resumenEl.innerHTML = data.summary_table;
+       totalEl.textContent = data.summary_total.toFixed(2);
+      }
 
       if (typeof data.investment === "string") {
         inversionElem.textContent = data.investment; // mensaje como "No se han realizado inversiones"
@@ -619,15 +656,7 @@
 }
 
 
-    if (typeof data.investment === "string") {
-  inversionElem.textContent = data.investment;
-  balanceElem.textContent = "N/A";
-  balanceElem.style.color = "gray";
-} else {
-  inversionElem.textContent = data.investment.toFixed(2) + " USD";
-  balanceElem.textContent = data.balance.toFixed(2) + " USD";
-  balanceElem.style.color = data.balance >= 0 ? "green" : "red";
-}
+
 
   </script>
   

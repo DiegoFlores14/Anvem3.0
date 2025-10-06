@@ -4,7 +4,17 @@
   <meta charset="UTF-8">
   <title>Login - Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <style>
+    @font-face {
+      font-family: 'Futura Std Bold';
+      src: url("{{ url_for('static', filename='fonts/Futura Std Bold.woff2') }}") format('woff2'),
+           url("{{ url_for('static', filename='fonts/Futura Std Bold.woff') }}") format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+  
+
     body {
       margin: 0;
       padding: 0;
@@ -12,9 +22,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #000000;
+      background: #000;
       color: #fff;
-      font-family: Arial, sans-serif;
+      font-family: 'Futura Std', Arial, sans-serif;
       flex-direction: column;
     }
 
@@ -23,39 +33,93 @@
     }
 
     .login-image img {
-      max-width: 150px;
+      max-width: 140px;
       height: auto;
+      border-radius: 6px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
     }
 
     .login-container {
-      background: #1b1b1b;
+      background: #161616;
       padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.7);
-      width: 350px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+      width: 100%;
+      max-width: 380px;
     }
+
+    .form-label {
+      font-weight: bold;
+    }
+
+    .form-control {
+      background-color: #222;
+      border: 1px solid #444;
+      color: #fff;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .form-control:focus {
+      background-color: #111;
+      border-color: #BEA47D;
+      box-shadow: 0 0 0 0.2rem rgba(190, 164, 125, 0.25);
+    }
+
+    .btn-login {
+      background-color: #BEA47D;
+      border: none;
+      color: #000;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-login:hover {
+      background-color: #d9bb8d;
+      color: #000;
+    }
+
+    .alert {
+      padding: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .text-center h3 {
+      font-family: 'Futura Std', sans-serif;
+      color: #ffffff;
+    }
+
   </style>
 </head>
 <body>
 
-  <!-- Imagen colocada por fuera del contenedor -->
   <div class="login-image">
     <img src="{{ url_for('static', filename='images/logo.jpg') }}" alt="Logo">
   </div>
 
   <div class="login-container">
     <h3 class="text-center mb-4">Iniciar Sesión</h3>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-danger text-center" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
     <form method="POST" action="{{ url_for('login') }}">
       <div class="mb-3">
         <label for="username" class="form-label">Usuario</label>
-        <input type="text" name="username" id="username" class="form-control" required>
+        <input type="text" name="username" id="username" class="form-control" required autofocus>
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Contraseña</label>
         <input type="password" name="password" id="password" class="form-control" required>
       </div>
       <div class="d-grid">
-        <button type="submit" class="btn btn-light">Ingresar</button>
+        <button type="submit" class="btn btn-login">Ingresar</button>
       </div>
     </form>
   </div>
