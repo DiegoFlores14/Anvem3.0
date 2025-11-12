@@ -5,379 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard - {{ artist_name }}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
 
-  
-  <style>
-    .positive-balance {
-  color: #006400;
-}
-
-.negative-balance {
-  color: #8B0000;
-}
-
-.info-muted {
-  color: #849A9F;
-}
-
-.bg-soft {
-  background-color: #EDEBE6;
-}
-
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: #F2F0EB;
-      color: #001F24;
-    }
-    .header {
-      background-color: #000;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 1000;
-      height: 60px;
-    }
-    .header img {
-      width: 80px;
-      height: auto;
-    }
-    .header-title {
-      font-family: 'Futura Std', serif;
-      color: #BEA47D;
-      font-size: 28px;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      margin: 0;
-    }
-    .header-right {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .header-right a {
-      color: #DFFBFF;
-      text-decoration: none;
-    }
-
-    .main-container {
-      padding: 1rem;
-      max-width: 1200px;
-      margin: 80px auto 0 auto;
-    }
-
-    .row-quarter-info {
-      border-top: 1px solid #2A7F8E;
-      border-bottom: 1px solid #2A7F8E;
-      padding: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-    }
-    .quarter-select {
-      display: flex;
-      gap: 10px;
-    }
-    select.form-select.form-select-sm {
-      min-width: 100px;
-    }
-    .quarter-label-box {
-      text-align: center;
-      font-size: 0.9rem;
-      line-height: 1.2;
-      flex-grow: 1;
-    }
-    /* AHORA el año va arriba (quarter-label) y los meses abajo (quarter-dates) */
-    .quarter-label-box .quarter-label {
-      font-family: 'Futura Std', sans-serif;
-      font-weight: bold;
-      color: #001F24;
-    }
-    .quarter-label-box .quarter-dates {
-      color: #2A7F8E;
-      font-style: italic;
-    }
-
-    .btn.btn-outline-dark.btn-sm {
-      color: #001F24;
-      border-color: #001F24;
-    }
-    .btn.btn-outline-dark.btn-sm:hover {
-      background-color: #001F24;
-      color: #DFFBFF;
-    }
-    .btn.btn-warning {
-      background-color: #BEA47D;
-      border: none;
-      color: black;
-    }
-
-    .row-upper {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-}
-
-@media (max-width: 768px) {
-  .row-upper {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
-
-    
-    .left-col {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .stat-box {
-      background-color: white;
-      color: black;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      height: 135px;
-    }
-    .stat-box-header {
-      background-color: #161936;
-      color: white;
-      text-align: center;
-      padding: 0.5rem;
-      font-weight: bold;
-      font-size: 1.2rem;
-      font-family: 'Futura Std', sans-serif;
-    }
-    .stat-box-body {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 2rem;
-      font-weight: bold;
-    }
-
-    .center-box {
-      background-color: white;
-      border-radius: 10px;
-      color: black;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      overflow: hidden;
-      width: 100%;
-      max-width: 380px;
-    }
-    .center-box-header {
-      background-color: #161936;
-      color: white;
-      text-align: center;
-      padding: 0.4rem;
-      width: 100%;
-      font-weight: bold;
-      margin-bottom: 0.3rem;
-      font-family: 'Futura Std', sans-serif;
-    }
-    .center-box-body img {
-      width: 100%;
-      height: 248px;
-      object-fit: cover;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .right-duda {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .network-line, .line-below-duda {
-      width: 100%;
-      height: 1px;
-      background-color: #001F24;
-      margin: 0.3rem 0;
-    }
-    .network-title {
-      font-family: 'Futura Std', serif;
-      font-size: 1.2rem;
-      color: #001F24;
-      text-align: center;
-    }
-    .network-icons {
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 0.3rem;
-    }
-    .network-icons img {
-      width: 32px;
-      height: 32px;
-    }
-    .duda-bottom {
-      text-align: right;
-      margin-top: auto;
-    }
-
-    .row-bottom {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      margin: 2rem 0;
-    }
-    .bottom-box {
-      background-color: white;
-      border-radius: 10px;
-      color: black;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-      padding: 1rem;
-      flex: 1;
-      min-width: 300px;
-      position: relative;
-    }
-    .bottom-box-header {
-      background-color: #161936;
-      color: white;
-      text-align: center;
-      padding: 0.5rem;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-      font-weight: bold;
-      margin: -1rem -1rem 1rem -1rem;
-      font-family: 'Futura Std', sans-serif;
-    }
-    .table-transparent tbody tr,
-    .table-transparent tbody td {
-      background-color: transparent !important;
-      border-bottom: 1px solid #001F24 !important;
-      color: #001F24 !important;
-    }
-    .table-transparent tbody td:first-child {
-      text-align: left;
-      padding-left: 1rem;
-    }
-    .table-transparent tbody td:last-child {
-      text-align: right;
-      padding-right: 1rem;
-    }
-
-    .toggle-btn {
-      position: absolute;
-      bottom: 10px;
-      right: 15px;
-      background: #161936;
-      color: white;
-      padding: 4px 10px;
-      font-size: 12px;
-      border-radius: 20px;
-      border: none;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    .toggle-btn:hover {
-      background: #2A7F8E;
-    }
-
-    .fade {
-      opacity: 0;
-      transition: opacity 0.4s ease-in-out;
-    }
-    .fade.show {
-      opacity: 1;
-    }
-
-    .source-chart img,
-    .song-chart img {
-      width: 100%;
-      max-width: 400px;
-      height: auto;
-      margin-top: 1rem;
-      border-radius: 10px;
-    }
-    
-    @media (max-width: 768px) {
-  .row-upper {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .left-col,
-  .center-box,
-  .right-duda {
-    width: 100%;
-  }
-
-  .quarter-select {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
-
-  .quarter-label-box {
-    text-align: left;
-    width: 100%;
-  }
-
-  .header-title {
-    font-size: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .stat-box {
-    height: auto;
-  }
-
-  .bottom-box {
-    min-width: 100%;
-  }
-
-  .network-icons img {
-    width: 24px;
-    height: 24px;
-  }
-}
-@media (max-width: 768px) {
-  .center-box {
-    order: 1 !important;
-  }
-
-  .left-col {
-    order: 2 !important;
-  }
-
-  .right-duda {
-    order: 3 !important;
-  }
-}
-
-  </style>
-  
 </head>
 <body>
-  <header class="header">
-    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
-    <h1 class="header-title">{{ artist_name }}</h1>
-    <div class="header-right">
-      <a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
-    </div>
-  </header>
+ <header class="header">
+  <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo">
+  <h1 class="header-title">{{ artist_name }}</h1>
+  <div class="header-right">
+    <!-- Menú de tres puntos -->
+   <div class="dropdown">
+  <button class="btn dropdown-toggle menu-btn" type="button" id="menuButton"
+    data-bs-toggle="dropdown" aria-expanded="false">
+    ⋮
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end custom-dropdown" aria-labelledby="menuButton">
+    <li>
+      <a class="dropdown-item custom-item" href="{{ url_for('logout') }}">Cerrar sesión</a>
+    </li>
+  </ul>
+</div>
+
+</header>
+
 
  
   <div class="main-container">
@@ -464,26 +118,55 @@
   <!-- Stay Connected: último en móvil y en escritorio -->
   <div class="right-duda order-3 order-md-3">
     <div class="network-top">
-      <div class="network-line"></div>
-      <h2 class="network-title">Stay Connected</h2>
-      <div class="network-line"></div>
-      <div class="network-icons">
-        <a href="https://www.instagram.com/anvemmusic/">
-          <img src="{{ url_for('static', filename='images/insta.png') }}" alt="Instagram">
-        </a>
-        <a href="https://www.youtube.com/@AnvemMusic">
-          <img src="{{ url_for('static', filename='images/youtube.png') }}" alt="YouTube">
-        </a>
-        <a href="https://anvemmusic.com">
-          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Anvem">
-        </a>
-      </div>
+    </div><!-- ====================== ROYALTIES BREAKDOWN ====================== -->
+<!-- ====================== ROYALTIES BREAKDOWN ====================== -->
+<div class="royalties-flow">
+  <h2>Royalties Breakdown</h2>
+
+  <div class="royalty-step">
+    <div class="icon">💰</div>
+    <div class="content">
+      <span class="label">Gross Amount</span>
+      <span class="value" id="gross-amount">$0.00</span>
     </div>
-    <div class="duda-bottom">
-      <span>¿Alguna duda o aclaración?</span>
-      <a href="https://anvemmusic.com/contacto" class="btn btn-warning">Contáctanos</a>
+  </div>
+  <div class="connector-line"></div>
+
+  <div class="royalty-step">
+    <div class="icon">📉</div>
+    <div class="content">
+      <span class="label">Distribution Fee (20%)</span>
+      <span class="value" id="distribution-fee">$0.00</span>
     </div>
-    <div class="line-below-duda"></div>
+  </div>
+  <div class="connector-line"></div>
+
+  <div class="royalty-step">
+    <div class="icon">🏦</div>
+    <div class="content">
+      <span class="label">Net After Fee</span>
+      <span class="value" id="net-after-fee">$0.00</span>
+    </div>
+  </div>
+  <div class="connector-line"></div>
+
+  <div class="royalty-step">
+    <div class="icon">🤝</div>
+    <div class="content">
+      <span class="label">ANVEM Share (50%)</span>
+      <span class="value" id="anvem-share">$0.00</span>
+    </div>
+  </div>
+  <div class="connector-line"></div>
+
+  <div class="royalty-step final">
+    <div class="icon">🎤</div>
+    <div class="content">
+      <span class="label">Artist Share (50%)</span>
+      <span class="value" id="artist-share">$0.00</span>
+    </div>
+  </div>
+</div>
   </div>
 </div>
 
@@ -545,10 +228,11 @@
 
 
 
+
   </div>
 
   <footer class="text-center py-3">
-    <small class="text-muted">© 2024 Anvem Music. Todos los derechos reservados.</small>
+    <small class="text-muted">© 2025 Anvem Music. Todos los derechos reservados.</small>
   </footer>
 
   <script>
@@ -601,64 +285,151 @@
   const artist = "{{ selected_artist_key }}";
 
   fetch(`/load_dashboard_data?year=${year}&quarter=${quarter}&artist=${artist}`)
-    .then(response => response.json())
-    .then(data => {
-      // Ganancia generada
-      document.getElementById("ganancia").textContent = data.future_total.toFixed(2) + " USD";
+  .then(response => response.json())
+  .then(data => {
+    // Ganancia generada
+    document.getElementById("ganancia").textContent = data.future_total.toFixed(2) + " USD";
 
-      // Inversión y Balance
-      const inversionElem = document.getElementById("inversion");
-      const balanceElem = document.getElementById("balance");
+    // Inversión y Balance
+    const inversionElem = document.getElementById("inversion");
+    const balanceElem = document.getElementById("balance");
 
-      // Si es AdminUser, mostrar resumen
-      if ("summary_table" in data) {
-       const resumenEl = document.getElementById("summary-table");
-       const totalEl = document.getElementById("summary-total");
+    if ("summary_table" in data) {
+      const resumenEl = document.getElementById("summary-table");
+      const totalEl = document.getElementById("summary-total");
+      resumenEl.innerHTML = data.summary_table;
+      totalEl.textContent = data.summary_total.toFixed(2);
+    }
 
-       resumenEl.innerHTML = data.summary_table;
-       totalEl.textContent = data.summary_total.toFixed(2);
-      }
+    if (typeof data.investment === "string") {
+      inversionElem.textContent = data.investment;
+      balanceElem.textContent = "N/A";
+      balanceElem.style.color = "gray";
+    } else {
+      inversionElem.textContent = data.investment.toFixed(2) + " USD";
+      balanceElem.textContent = data.balance.toFixed(2) + " USD";
+      balanceElem.style.color = data.balance >= 0 ? "green" : "red";
+    }
 
-      if (typeof data.investment === "string") {
-        inversionElem.textContent = data.investment; // mensaje como "No se han realizado inversiones"
-        balanceElem.textContent = "N/A";
-        balanceElem.style.color = "gray";
-      } else {
-        inversionElem.textContent = data.investment.toFixed(2) + " USD";
-        balanceElem.textContent = data.balance.toFixed(2) + " USD";
-        balanceElem.style.color = data.balance >= 0 ? "green" : "red";
-      }
+    // Royalties
+    const royaltiesEl = document.getElementById("royalties-value");
+    royaltiesEl.textContent = `$${parseFloat(data.sheets.total_royalties).toFixed(2)}`;
 
-      // Royalties
-      const royaltiesEl = document.getElementById("royalties-value");
-      royaltiesEl.textContent = `$${parseFloat(data.sheets.total_royalties).toFixed(2)}`;
+    // Total Earned
+    const totalEl = document.getElementById("total-earned-value");
+    totalEl.textContent = `$${parseFloat(data.future_total).toFixed(2)}`;
 
-      // Total Earned
-      const totalEl = document.getElementById("total-earned-value");
-      totalEl.textContent = `$${parseFloat(data.future_total).toFixed(2)}`;
+    // Quarter Dates
+    const qd = document.getElementById("quarter-dates");
+    qd.textContent = data.quarter_dates;
 
-      // Quarter Dates
-      const qd = document.getElementById("quarter-dates");
-      qd.textContent = data.quarter_dates;
+    // Tabla por canción
+    const songTable = document.getElementById("song-table");
+    songTable.innerHTML = data.sheets.by_song;
 
-      // Tabla por canción
-      const songTable = document.getElementById("song-table");
-      songTable.innerHTML = data.sheets.by_song;
+    // Tabla por fuente
+    const sourceTable = document.getElementById("source-table");
+    sourceTable.innerHTML = data.sheets.by_source;
 
-      // Tabla por fuente
-      const sourceTable = document.getElementById("source-table");
-      sourceTable.innerHTML = data.sheets.by_source;
-    })
-    .catch(err => {
-      console.error("Error cargando datos:", err);
-      alert("Error al cargar el dashboard. Intenta más tarde.");
-    });
+    // ========================= ROYALTIES BREAKDOWN =========================
+    if (data.breakdown) {
+      document.getElementById("gross-amount").textContent = `$${data.breakdown.gross_amount.toFixed(2)}`;
+      document.getElementById("distribution-fee").textContent = `-$${data.breakdown.distribution_fee.toFixed(2)}`;
+      document.getElementById("net-after-fee").textContent = `$${data.breakdown.net_after_fee.toFixed(2)}`;
+      document.getElementById("anvem-share").textContent = `-$${data.breakdown.anvem_share.toFixed(2)}`;
+      document.getElementById("artist-share").textContent = `$${data.breakdown.artist_share.toFixed(2)}`;
+    }
+  })
+  .catch(err => {
+    console.error("Error cargando datos:", err);
+    alert("Error al cargar el dashboard. Intenta más tarde.");
+  });
+
 }
 
 
 
 
   </script>
-  
+  <!-- Bootstrap JS (incluye Popper) - REQUIRED para dropdowns -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Burbujas flotantes de redes sociales -->
+<div class="floating-bubbles">
+  <a href="https://www.instagram.com/" target="_blank" class="bubble insta" title="Instagram">
+    <i class="fab fa-instagram"></i>
+  </a>
+  <a href="https://www.tiktok.com/" target="_blank" class="bubble tiktok" title="TikTok">
+    <i class="fab fa-tiktok"></i>
+  </a>
+  <a href="https://www.youtube.com/" target="_blank" class="bubble youtube" title="YouTube">
+    <i class="fab fa-youtube"></i>
+  </a>
+</div>
+<!-- Burbuja de dudas / aclaraciones -->
+<div id="help-bubble" class="help-bubble" title="¿Alguna duda o aclaración?">
+  💬
+</div>
+
+<!-- Ventana emergente del chat -->
+<div id="help-chat" class="help-chat">
+  <div class="help-chat-header">
+    <span id="help-greeting"></span>
+    <button id="help-close">&times;</button>
+  </div>
+  <div class="help-chat-body">
+    <label for="help-message">Asunto:</label>
+    <textarea id="help-message" placeholder="Escribe aquí tu duda o aclaración..."></textarea>
+  </div>
+  <div class="help-chat-footer">
+    <button id="help-send">Enviar</button>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const helpBubble = document.getElementById('help-bubble');
+  const helpChat = document.getElementById('help-chat');
+  const helpClose = document.getElementById('help-close');
+  const helpSend = document.getElementById('help-send');
+  const greeting = document.getElementById('help-greeting');
+  const messageBox = document.getElementById('help-message');
+
+  // Cambia esta variable por la del artista en sesión:
+  const artistName = "{{ artist_name }}";  // desde Flask, por ejemplo
+
+  greeting.textContent = `👋 Hola ${artistName}, cuéntanos tu duda o aclaración.`;
+
+  helpBubble.addEventListener('click', () => {
+    helpChat.style.display = 'flex';
+  });
+
+  helpClose.addEventListener('click', () => {
+    helpChat.style.display = 'none';
+  });
+
+  helpSend.addEventListener('click', async () => {
+    const message = messageBox.value.trim();
+    if (!message) {
+      alert('Por favor escribe un asunto antes de enviar.');
+      return;
+    }
+
+    const response = await fetch('/send_help_message', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ artist: artistName, message })
+    });
+
+    if (response.ok) {
+      alert('Tu mensaje ha sido enviado. ¡Gracias!');
+      messageBox.value = '';
+      helpChat.style.display = 'none';
+    } else {
+      alert('Hubo un error al enviar tu mensaje. Intenta de nuevo.');
+    }
+  });
+});
+</script>
+
+
 </body>
 </html>

@@ -8,6 +8,9 @@ from datetime import timedelta
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from flask import Flask, render_template, request, jsonify, session
+import smtplib
+from email.mime.text import MIMEText
 
 app = Flask(__name__)
 app.secret_key = "clave_secreta"  # Ajusta tu clave segura según lo necesites
@@ -252,6 +255,51 @@ def extract_net_payment_from_by_song(file_path):
     except Exception as e:
         print(f"Error al extraer 'Net Payment' desde 'By Song': {e}")
         return 0.0
+
+def generate_royalties_breakdown_chart(distribution_fee, artist_share, anvem_share):
+    try:
+        labels = ['Distribution Fee (20%)', 'Artist Share', 'ANVEM Share']
+        values = [distribution_fee, artist_share, anvem_share]
+
+        # Colores y figura
+        fig, ax = plt.subplots(figsize=(6, 6), facecolor='none')
+        colors = ['#ffb347', '#77dd77', '#779ecb']  # tonos distintos
+        wedges, texts = ax.pie(
+            values,
+            labels=None,
+            startangle=90,
+            wedgeprops=dict(edgecolor='white')
+        )
+
+        # aplicar colores
+        for w, c in zip(wedges, colors):
+            w.set_facecolor(c)
+
+        # Leyenda a la derecha con porcentajes
+        total = sum(values) if sum(values) != 0 else 1
+        legend_labels = [
+            f"{lab} — ${val:,.2f} ({(val/total*100):.1f}%)"
+            for lab, val in zip(labels, values)
+        ]
+        ax.legend(
+            wedges,
+            legend_labels,
+            title="Breakdown",
+            loc="center left",
+            bbox_to_anchor=(1, 0.5),
+            frameon=False,
+            prop={'size': 10}
+        )
+        ax.axis('equal')
+        ax.set_title("Royalties Breakdown", fontsize=12, fontweight='bold')
+
+        out_path = os.path.join(GENERATED_FOLDER, "royalties_breakdown.png")
+        plt.tight_layout()
+        plt.savefig(out_path, transparent=True)
+        plt.close()
+        print(f"✅ Royalties breakdown generated: {out_path}")
+    except Exception as e:
+        print(f"Error generating royalties breakdown chart: {e}")
 
 
 def load_excel_data(artist, quarter, year):
@@ -499,12 +547,10 @@ def load_dashboard_data():
         if "user" not in session:
             return jsonify({"error": "Unauthorized"}), 401
 
-        # Determinar el artista a usar
+        # Determinar artista según permisos
         if session.get("is_admin", False) and selected_artist_key == "all":
-            # Si es admin y pide ver todos, usar el resumen general
             artist = "resumen_por_artista_"
         else:
-            # Caso normal (admin viendo artista específico o usuario normal)
             if selected_artist_key and selected_artist_key != "all":
                 artist = USERS.get(selected_artist_key, {}).get("artist", selected_artist_key)
             else:
@@ -525,6 +571,37 @@ def load_dashboard_data():
         # Calcular balance
         balance = round(future_total - investment, 2) if isinstance(investment, (int, float)) else None
 
+                # 🧾 NUEVO BLOQUE: aplicar deducciones automáticas
+        total_royalties = sheets_data.get("total_royalties", 0.0)
+
+        # === Cálculo general del breakdown ===
+        distribution_fee = round(total_royalties * 0.20, 2)   # 20% de fee
+        after_fee = round(total_royalties - distribution_fee, 2)
+        artist_share = round(after_fee * 0.50, 2)              # 50% artista
+        anvem_share = round(after_fee * 0.50, 2)               # 50% ANVEM
+
+        # === Ajustar valores mostrados ===
+        # En Royalties M7 se muestra solo lo que le toca al artista
+        sheets_data["total_royalties_artist"] = artist_share
+
+        # Para el total anual (future_total) también se aplica el mismo descuento global
+        future_total_raw = future_total
+        distribution_fee_total = round(future_total_raw * 0.20, 2)
+        after_fee_total = round(future_total_raw - distribution_fee_total, 2)
+        artist_share_total = round(after_fee_total * 0.50, 2)
+
+        # Actualizamos para que Total Earned 2025 muestre solo lo del artista
+        future_total = artist_share_total
+
+        # Datos para el breakdown completo
+        breakdown_data = {
+            "gross_amount": total_royalties,
+            "distribution_fee": distribution_fee,
+            "net_after_fee": after_fee,
+            "artist_share": artist_share,
+            "anvem_share": anvem_share
+        }
+
         # Generar gráfico de balance
         generate_balance_bar_chart(future_total, investment, balance)
 
@@ -535,19 +612,25 @@ def load_dashboard_data():
         # Devolver respuesta JSON al frontend
         return jsonify({
             "sheets": {
-                "by_song": sheets_data["By Song"],
-                "by_source": sheets_data["By Source"],
-                "total_royalties": sheets_data["total_royalties"]
+                "by_song": sheets_data.get("By Song", ""),
+                "by_source": sheets_data.get("By Source", ""),
+                "total_royalties": sheets_data["total_royalties_artist"]  # 👈 solo artista
             },
-            "future_total": future_total,
+            "future_total": future_total,  # 👈 solo artista
             "investment": investment,
             "balance": balance,
-            "quarter_dates": f"{quarter_range} {selected_year}"
+            "quarter_dates": f"{quarter_range} {selected_year}",
+            "breakdown": breakdown_data
         })
 
+
     except Exception as e:
+        import traceback
         print(f"[ERROR en /load_dashboard_data]: {e}")
+        traceback.print_exc()
         return jsonify({"error": "Error interno del servidor"}), 500
+
+
 
 
 @app.route("/download_statement")
@@ -572,6 +655,38 @@ def download_statement():
         return send_file(file_path, as_attachment=True)
 
     return "Archivo no encontrado", 404
+
+from flask import Flask, request, jsonify
+import smtplib
+from email.mime.text import MIMEText
+
+@app.route('/send_help_message', methods=['POST'])
+def send_help_message():
+    data = request.get_json()
+    artist = data.get('artist')
+    message = data.get('message')
+
+    # Configura el correo destino
+    to_email = "soporte@tuequipo.com"
+    subject = f"Duda/Aclaración de {artist}"
+    body = f"Artista: {artist}\n\nMensaje:\n{message}"
+
+    msg = MIMEText(body)
+    msg['Subject'] = subject
+    msg['From'] = "no-reply@tusistema.com"
+    msg['To'] = to_email
+
+    try:
+        with smtplib.SMTP('smtp.tu-servidor.com', 587) as server:
+            server.starttls()
+            server.login("tu_usuario", "tu_contraseña")
+            server.send_message(msg)
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        print("Error al enviar correo:", e)
+        return jsonify({"success": False}), 500
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

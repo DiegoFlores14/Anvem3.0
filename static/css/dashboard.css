@@ -1,0 +1,851 @@
+/* 💬 Burbuja de ayuda estilo premium negro/dorado */
+.help-bubble {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  width: 55px;
+  height: 55px;
+  background-color: black;
+  color: white;
+  border: 2px solid #BEA47D;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.help-bubble:hover {
+  background-color: #BEA47D;
+  color: black;
+  border-color: #BEA47D;
+  transform: scale(1.1);
+  box-shadow: 0 6px 14px rgba(255,215,0,0.5);
+}
+
+/* 🪟 Ventana emergente de chat */
+.help-chat {
+  position: fixed;
+  bottom: 90px;
+  left: 25px;
+  width: 310px;
+  background: #111;
+  color: white;
+  border: 2px solid #BEA47D;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1001;
+  font-family: 'Futura Std', sans-serif;
+}
+
+/* Encabezado */
+.help-chat-header {
+  background: black;
+  border-bottom: 2px solid #BEA47D;
+  color: white;
+  padding: 10px 12px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.help-chat-header button {
+  background: transparent;
+  border: none;
+  color: #BEA47D;
+  font-size: 22px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.help-chat-header button:hover {
+  color: white;
+}
+
+/* Cuerpo */
+.help-chat-body {
+  padding: 12px;
+}
+
+.help-chat-body label {
+  font-weight: bold;
+  color: #BEA47D;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.help-chat-body textarea {
+  width: 100%;
+  height: 80px;
+  resize: none;
+  border-radius: 8px;
+  border: 1px solid #BEA47D;
+  padding: 8px;
+  background-color: #000;
+  color: white;
+  font-family: 'Futura Std', sans-serif;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.help-chat-body textarea:focus {
+  border-color: white;
+}
+
+/* Pie */
+.help-chat-footer {
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+  background: #000;
+  border-top: 2px solid #BEA47D;
+}
+
+.help-chat-footer button {
+  background: #BEA47D;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.help-chat-footer button:hover {
+  background: white;
+  color: black;
+  transform: scale(1.05);
+}
+
+/* ===== ROYALTIES FLOW (perfect symmetry version) ===== */
+.royalties-flow {
+  background: #ffffff;
+  border: 1px solid #d1d1d1;
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.royalties-flow h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0c2c2f;
+  border-bottom: 2px solid #d4af37;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+  text-align: left;
+}
+
+/* pasos */
+.royalty-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 3px 0;
+}
+
+.royalty-step .icon {
+  font-size: 1rem;
+  background: #f7f7f7;
+  border: 1.3px solid #d4af37;
+  color: #1a3b3d;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.royalty-step .content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1;
+  background: #fafafa;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+.royalty-step .label {
+  font-weight: 600;
+  color: #1a3b3d;
+  font-size: 0.85rem;
+}
+
+.royalty-step .value {
+  font-weight: 700;
+  color: #004e50;
+  font-size: 0.85rem;
+}
+
+/* líneas de conexión */
+.connector-line {
+  height: 10px;
+  width: 1.8px;
+  background: #d4af37;
+  margin: 0 auto;
+  position: relative;
+}
+
+.connector-line::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  background: #d4af37;
+  border-radius: 50%;
+}
+
+/* paso final */
+.royalty-step.final {
+  background: linear-gradient(90deg, #fff8e1, #fffde7);
+  border: 1.5px solid #d4af37;
+  border-radius: 8px;
+  padding: 4px 8px;
+  margin-top: 4px;
+  box-shadow: 0 0 5px rgba(212, 175, 55, 0.25);
+}
+
+.royalty-step.final .icon {
+  background: #d4af37;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+}
+
+.royalty-step.final .value {
+  color: #d4af37;
+  font-size: 0.9rem;
+}
+
+
+/* ===== Contenedor vacío (reemplazo de Stay Connected) ===== */
+.stay-connected-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  pointer-events: none;
+}
+
+/* 🟡 Burbujas flotantes redes sociales */
+.floating-bubbles {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: row; /* horizontal */
+  gap: 6px; /* más juntas */
+  z-index: 9999;
+}
+
+.bubble {
+  width: 45px;
+  height: 45px;
+  background-color: black;
+  color: white;
+  border: 2px solid #BEA47D;
+  border-radius: 50%; /* completamente redonda */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  animation: float 3s ease-in-out infinite;
+}
+
+.bubble:hover {
+  background-color: #BEA47D;
+  color: black;
+  transform: scale(1.1);
+}
+
+/* Animación flotante sutil */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+
+
+
+    .positive-balance {
+  color: #006400;
+}
+
+.negative-balance {
+  color: #8B0000;
+}
+
+.info-muted {
+  color: #849A9F;
+}
+
+.bg-soft {
+  background-color: #EDEBE6;
+}
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #F2F0EB;
+      color: #001F24;
+    }
+    .header {
+      background-color: #000;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      height: 60px;
+    }
+    .header img {
+      width: 80px;
+      height: auto;
+    }
+    .header-title {
+      font-family: 'Futura Std', serif;
+      color: #BEA47D;
+      font-size: 28px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0;
+    }
+    .header-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .header-right a {
+      color: #DFFBFF;
+      text-decoration: none;
+    }
+/* === Dropdown Logout === */
+.dropdown-menu {
+  background-color: #161936 !important;
+  border-radius: 8px !important;
+  padding: 0.5rem 0 !important;
+  min-width: 150px !important;
+}
+
+.dropdown-item {
+  color: #DFFBFF !important;
+  font-family: 'Futura Std', sans-serif;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background-color: #2A7F8E !important;
+  color: white !important;
+}
+
+.header-right .btn {
+  color: #DFFBFF !important;
+}
+
+/* Animación suave */
+.header-right .dropdown-toggle::after {
+  display: none !important;
+}
+.header-right .dropdown-menu {
+  animation: fadeIn 0.2s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+    .main-container {
+      padding: 1rem;
+      max-width: 1200px;
+      margin: 80px auto 0 auto;
+    }
+
+    .row-quarter-info {
+      border-top: 1px solid #2A7F8E;
+      border-bottom: 1px solid #2A7F8E;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .quarter-select {
+      display: flex;
+      gap: 10px;
+    }
+    select.form-select.form-select-sm {
+      min-width: 100px;
+    }
+    .quarter-label-box {
+      text-align: center;
+      font-size: 0.9rem;
+      line-height: 1.2;
+      flex-grow: 1;
+    }
+    /* AHORA el año va arriba (quarter-label) y los meses abajo (quarter-dates) */
+    .quarter-label-box .quarter-label {
+      font-family: 'Futura Std', sans-serif;
+      font-weight: bold;
+      color: #001F24;
+    }
+    .quarter-label-box .quarter-dates {
+      color: #2A7F8E;
+      font-style: italic;
+    }
+
+    .btn.btn-outline-dark.btn-sm {
+      color: #001F24;
+      border-color: #001F24;
+    }
+    .btn.btn-outline-dark.btn-sm:hover {
+      background-color: #001F24;
+      color: #DFFBFF;
+    }
+    .btn.btn-warning {
+      background-color: #BEA47D;
+      border: none;
+      color: black;
+    }
+
+    .row-upper {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .row-upper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+    
+    .left-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .stat-box {
+      background-color: white;
+      color: black;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .stat-box-header {
+      background-color: #161936;
+      color: white;
+      text-align: center;
+      padding: 0.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+      font-family: 'Futura Std', sans-serif;
+    }
+    .stat-box-body {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .center-box {
+      background-color: white;
+      border-radius: 10px;
+      color: black;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow: hidden;
+      width: 100%;
+      max-width: 380px;
+    }
+    .center-box-header {
+      background-color: #161936;
+      color: white;
+      text-align: center;
+      padding: 0.4rem;
+      width: 100%;
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+      font-family: 'Futura Std', sans-serif;
+    }
+    .center-box-body {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* evita márgenes blancos */
+  padding: 0;
+  margin: 0;
+}
+
+.center-box-body img {
+ /* llena el contenedor sin deformarse */
+  border-radius: 0; /* elimina bordes blancos */
+  display: block;
+}
+
+    .right-duda {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .network-line, .line-below-duda {
+      width: 100%;
+      height: 1px;
+      background-color: #001F24;
+      margin: 0.3rem 0;
+    }
+    .network-title {
+      font-family: 'Futura Std', serif;
+      font-size: 1.2rem;
+      color: #001F24;
+      text-align: center;
+    }
+    .network-icons {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+    }
+    .network-icons img {
+      width: 32px;
+      height: 32px;
+    }
+    .duda-bottom {
+      text-align: right;
+      margin-top: auto;
+    }
+
+    .row-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+    .bottom-box {
+      background-color: white;
+      border-radius: 10px;
+      color: black;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      padding: 1rem;
+      flex: 1;
+      min-width: 300px;
+      position: relative;
+    }
+    .bottom-box-header {
+      background-color: #161936;
+      color: white;
+      text-align: center;
+      padding: 0.5rem;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      font-weight: bold;
+      margin: -1rem -1rem 1rem -1rem;
+      font-family: 'Futura Std', sans-serif;
+    }
+    .table-transparent tbody tr,
+    .table-transparent tbody td {
+      background-color: transparent !important;
+      border-bottom: 1px solid #001F24 !important;
+      color: #001F24 !important;
+    }
+    .table-transparent tbody td:first-child {
+      text-align: left;
+      padding-left: 1rem;
+    }
+    .table-transparent tbody td:last-child {
+      text-align: right;
+      padding-right: 1rem;
+    }
+
+    .toggle-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 15px;
+      background: #161936;
+      color: white;
+      padding: 4px 10px;
+      font-size: 12px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .toggle-btn:hover {
+      background: #2A7F8E;
+    }
+
+    .fade {
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+    }
+    .fade.show {
+      opacity: 1;
+    }
+
+    .source-chart img,
+    .song-chart img {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      margin-top: 1rem;
+      border-radius: 10px;
+    }
+    
+    @media (max-width: 768px) {
+  .row-upper {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .left-col,
+  .center-box,
+  .right-duda {
+    width: 100%;
+  }
+
+  .quarter-select {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .quarter-label-box {
+    text-align: left;
+    width: 100%;
+  }
+
+  .header-title {
+    font-size: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .stat-box {
+    height: auto;
+  }
+
+  .bottom-box {
+    min-width: 100%;
+  }
+
+  .network-icons img {
+    width: 24px;
+    height: 24px;
+  }
+}
+@media (max-width: 768px) {
+  .center-box {
+    order: 1 !important;
+  }
+
+  .left-col {
+    order: 2 !important;
+  }
+
+  .right-duda {
+    order: 3 !important;
+  }
+}
+/* ===== Menú cuadrado dorado y más compacto ===== */
+
+.menu-btn {
+  background-color: #000 !important;
+  color: white !important;
+  border: 1px solid #BEA47D !important;
+  font-size: 16px;
+  border-radius: 0 !important;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.menu-btn:hover {
+  background-color: white !important;
+  color: #000 !important;
+}
+
+.custom-dropdown {
+  background-color: #000 !important;
+  border: 1px solid #BEA47D !important;
+  border-radius: 0 !important;
+  min-width: 140px !important;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.custom-item {
+  color: white !important;
+  font-size: 14px;
+  font-family: 'Futura Std', sans-serif;
+  text-align: center;
+  padding: 8px 0 !important;
+  transition: all 0.3s ease;
+}
+
+.custom-item:hover {
+  background-color: #BEA47D !important;
+  color: #000 !important;
+}
+
+/* ========== NUEVA ESTRUCTURA DE GRID PRINCIPAL ========== */
+.dashboard-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: stretch; /* Los tres se igualan en altura automáticamente */
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* La columna izquierda contendrá las dos tarjetas apiladas */
+.dashboard-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Las separa uniformemente */
+}
+
+/* Asegura que las tarjetas ocupen la altura proporcional */
+.dashboard-left .stat-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Si quieres que haya un pequeño espacio entre las dos tarjetas: */
+.dashboard-left .stat-box + .stat-box {
+  margin-top: 15px;
+}
+
+/* Mantiene consistencia visual */
+.center-box,
+.right-duda {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+/* ===== SYMMETRY FIX: Alturas iguales en las tres columnas ===== */
+
+/* Define altura base de cada tarjeta */
+:root {
+  --stat-box-height: 150px; /* puedes ajustar a 160px si lo ves más equilibrado */
+  --stat-gap: 15px;
+}
+
+/* Fuerza la altura fija de las tarjetas de la izquierda */
+.stat-box {
+  height: var(--stat-box-height) !important;
+  min-height: var(--stat-box-height) !important;
+  max-height: var(--stat-box-height) !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* La altura total de centro y derecha = (2 tarjetas + espacio entre ellas) */
+.center-box,
+.right-duda,
+.royalties-flow {
+  height: calc((var(--stat-box-height) * 2) + var(--stat-gap)) !important;
+  min-height: calc((var(--stat-box-height) * 2) + var(--stat-gap)) !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Imagen del artista ocupa todo sin dejar márgenes */
+.center-box-body {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  display: block;
+}
+
+.center-box-body img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+}
+
+/* Royalties Breakdown sin altura fija y con scroll suave si excede */
+.royalties-flow {
+  overflow: hidden;
+  padding: 12px 16px;
+}
+
+.royalties-flow .royalty-inner {
+  max-height: calc(100% - 30px);
+  overflow-y: auto;
+}
+
+/* En pantallas pequeñas, deja que todo sea auto (sin recortar) */
+@media (max-width: 768px) {
+  .stat-box,
+  .center-box,
+  .right-duda,
+  .royalties-flow {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .center-box-body img {
+    height: 300px;
+    object-fit: cover;
+  }
+}
