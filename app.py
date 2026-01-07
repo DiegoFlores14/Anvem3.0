@@ -75,6 +75,32 @@ def clean_by_song(df):
     df["Royalties"] = pd.to_numeric(df["Royalties"], errors="coerce").fillna(0)
     return df.nlargest(10, "Royalties")
 
+import smtplib
+from email.message import EmailMessage
+
+def send_email(subject, body, sender):
+    EMAIL_ORIGEN = "tucorreo@gmail.com"
+    EMAIL_PASSWORD = "TU_APP_PASSWORD"
+    EMAIL_DESTINO = "soporte@anvemmusic.com"
+
+    msg = EmailMessage()
+    msg["From"] = EMAIL_ORIGEN
+    msg["To"] = EMAIL_DESTINO
+    msg["Subject"] = subject
+
+    msg.set_content(f"""
+Nuevo mensaje de soporte
+
+Artista: {sender}
+
+Mensaje:
+{body}
+""")
+
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        server.login(EMAIL_ORIGEN, EMAIL_PASSWORD)
+        server.send_message(msg)
+
 def clean_by_source(df):
     df.drop(columns=[c for c in df.columns if "unit" in c.lower()], inplace=True, errors="ignore")
     source_col = find_column(df, POSSIBLE_SOURCE_KEYWORDS)
@@ -666,27 +692,27 @@ def send_help_message():
     artist = data.get('artist')
     message = data.get('message')
 
-    # Configura el correo destino
-    to_email = "soporte@tuequipo.com"
-    subject = f"Duda/Aclaración de {artist}"
-    body = f"Artista: {artist}\n\nMensaje:\n{message}"
+    send_email(
+        subject=f"Duda/Aclaración de {artist}",
+        body=message,
+        sender=artist
+    )
 
-    msg = MIMEText(body)
-    msg['Subject'] = subject
-    msg['From'] = "no-reply@tusistema.com"
-    msg['To'] = to_email
-
-    try:
-        with smtplib.SMTP('smtp.tu-servidor.com', 587) as server:
-            server.starttls()
-            server.login("tu_usuario", "tu_contraseña")
-            server.send_message(msg)
-        return jsonify({"success": True}), 200
-    except Exception as e:
-        print("Error al enviar correo:", e)
-        return jsonify({"success": False}), 500
+    return jsonify({"success": True}), 200
 
 
+@app.route("/send_support_message", methods=["POST"])
+def send_support_message():
+    data = request.json
+    artist = data["artist"]
+    message = data["message"]
 
+    send_email(
+        to="soporte@tuequipo.com",
+        subject=f"Duda de {artist}",
+        body=f"Artista: {artist}\n\nMensaje:\n{message}"
+    )
+
+    return jsonify({"status": "ok"})
 if __name__ == "__main__":
     app.run(debug=True)

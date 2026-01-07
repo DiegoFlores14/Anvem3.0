@@ -364,70 +364,205 @@
   <a href="https://www.youtube.com/@AnvemMusic" target="_blank" class="bubble youtube" title="YouTube">
     <i class="fab fa-youtube"></i>
   </a>
-</div>
-<!-- Burbuja de dudas / aclaraciones -->
-<div id="help-bubble" class="help-bubble" title="¿Alguna duda o aclaración?">
-  💬
-</div>
+  </div>
+<!-- Burbuja de ayuda (lado izquierdo) -->
+<button id="helpBubble" class="help-bubble-left">❓</button>
 
-<!-- Ventana emergente del chat -->
-<div id="help-chat" class="help-chat">
+<!-- Ventana del chat -->
+<div id="helpChat" class="help-chat hidden">
   <div class="help-chat-header">
-    <span id="help-greeting"></span>
-    <button id="help-close">&times;</button>
+    <span>Asistente ANVEM</span>
+    <button id="closeHelp">✕</button>
   </div>
-  <div class="help-chat-body">
-    <label for="help-message">Asunto:</label>
-    <textarea id="help-message" placeholder="Escribe aquí tu duda o aclaración..."></textarea>
-  </div>
+
+  <div class="help-chat-body" id="chatBody"></div>
+
   <div class="help-chat-footer">
-    <button id="help-send">Enviar</button>
+    <input type="text" id="chatInput" placeholder="Escribe aquí..." />
+    <button id="sendChat">Enviar</button>
   </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const helpBubble = document.getElementById('help-bubble');
-  const helpChat = document.getElementById('help-chat');
-  const helpClose = document.getElementById('help-close');
-  const helpSend = document.getElementById('help-send');
-  const greeting = document.getElementById('help-greeting');
-  const messageBox = document.getElementById('help-message');
-
-  // Cambia esta variable por la del artista en sesión:
-  const artistName = "{{ artist_name }}";  // desde Flask, por ejemplo
-
-  greeting.textContent = `👋 Hola ${artistName}, cuéntanos tu duda o aclaración.`;
-
-  helpBubble.addEventListener('click', () => {
-    helpChat.style.display = 'flex';
-  });
-
-  helpClose.addEventListener('click', () => {
-    helpChat.style.display = 'none';
-  });
-
-  helpSend.addEventListener('click', async () => {
-    const message = messageBox.value.trim();
-    if (!message) {
-      alert('Por favor escribe un asunto antes de enviar.');
-      return;
-    }
-
-    const response = await fetch('/send_help_message', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ artist: artistName, message })
-    });
-
-    if (response.ok) {
-      alert('Tu mensaje ha sido enviado. ¡Gracias!');
-      messageBox.value = '';
-      helpChat.style.display = 'none';
-    } else {
-      alert('Hubo un error al enviar tu mensaje. Intenta de nuevo.');
-    }
-  });
+chatInput.addEventListener("keydown", function (e) {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    handleUserMessage();
+  }
 });
+</script>
+
+<script>
+const helpBubble = document.getElementById("helpBubble");
+const helpChat = document.getElementById("helpChat");
+const closeHelp = document.getElementById("closeHelp");
+const chatBody = document.getElementById("chatBody");
+const chatInput = document.getElementById("chatInput");
+const sendChat = document.getElementById("sendChat");
+
+let waitingForEmail = false;
+
+helpBubble.onclick = () => {
+  helpChat.classList.remove("hidden");
+  chatBody.innerHTML = "";
+  waitingForEmail = false;
+  chatStep = "menu";
+
+  botMessage(`👋 Hola {{ artist_name }}.<br>Soy el asistente de ANVEM.`);
+  showMainMenu();
+};
+
+closeHelp.onclick = () => {
+  helpChat.classList.add("hidden");
+};
+
+sendChat.onclick = handleUserMessage;
+
+function botMessage(text) {
+  chatBody.innerHTML += `<div class="bot-msg">🤖 ${text}</div>`;
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+function userMessage(text) {
+  chatBody.innerHTML += `<div class="user-msg">🧑 ${text}</div>`;
+  chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+
+function handleUserMessage() {
+  const text = chatInput.value.trim();
+  if (!text) return;
+
+  userMessage(text);
+  chatInput.value = "";
+
+  if (waitingForEmail) {
+    sendSupportEmail(text);
+    return;
+  }
+
+  if (text === "0") {
+    showMainMenu();
+    return;
+  }
+
+  if (chatStep === "menu") {
+    handleMenuSelection(text);
+    return;
+  }
+
+  if (chatStep === "payments") {
+    handlePaymentsFlow(text);
+    return;
+  }
+
+  botMessage("No entendí eso 🤔 Escribe 0 para volver al menú.");
+}
+
+function sendSupportEmail(message) {
+  fetch("/send_help_message", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      artist: "{{ artist_name }}",
+      message
+    })
+  }).then(() => {
+    botMessage("✅ Mensaje enviado a soporte. Te responderemos pronto.");
+    waitingForEmail = false;
+  });
+}
+
+function showMainMenu() {
+  chatStep = "menu";
+  botMessage(`
+    ¿En qué te puedo ayudar hoy?<br><br>
+    1️⃣ Pagos y royalties<br>
+    2️⃣ Estados de cuenta<br>
+    3️⃣ Fechas de pago<br>
+    4️⃣ Problemas técnicos<br>
+    5️⃣ Hablar con soporte<br><br>
+    Escribe el número de la opción.
+  `);
+}
+function handleMenuSelection(option) {
+  switch (option) {
+    case "1":
+      chatStep = "payments";
+      botMessage(`
+        💰 Pagos y Royalties<br><br>
+        1️⃣ ¿Cómo se calculan?<br>
+        2️⃣ ¿Por qué cambian cada mes?<br>
+        3️⃣ Tengo una discrepancia<br><br>
+        0️⃣ Volver
+      `);
+      break;
+
+    case "2":
+      botMessage(`
+        📄 Tu estado de cuenta se genera por trimestre.
+        Refleja ingresos netos después de deducciones.
+      `);
+      showMainMenu();
+      break;
+
+    case "3":
+      botMessage(`
+        📅 Los pagos se procesan dentro de los primeros 15 días
+        del mes siguiente al cierre del trimestre.
+      `);
+      showMainMenu();
+      break;
+
+    case "4":
+      botMessage(`
+        🛠️ Si ves datos incorrectos:
+        - Cierra sesión
+        - Borra caché
+        - Vuelve a entrar
+      `);
+      showMainMenu();
+      break;
+
+    case "5":
+      botMessage("Perfecto 👍 Escríbeme tu mensaje y lo envío a soporte.");
+      waitingForEmail = true;
+      break;
+
+    default:
+      botMessage("Opción no válida. Escribe 0 para volver.");
+  }
+}
+function handlePaymentsFlow(option) {
+  switch (option) {
+    case "1":
+      botMessage(`
+        Los royalties se calculan según streams,
+        plataformas y territorios.
+        Las deducciones se aplican automáticamente.
+      `);
+      botMessage("Escribe 0 para volver o 5 para soporte.");
+      break;
+
+    case "2":
+      botMessage(`
+        Los ingresos pueden variar por:
+        - Estacionalidad
+        - Plataformas
+        - Retenciones
+      `);
+      botMessage("Escribe 0 para volver.");
+      break;
+
+    case "3":
+      botMessage("Entiendo 👍 Escríbeme el detalle y lo envío a soporte.");
+      waitingForEmail = true;
+      break;
+
+    default:
+      botMessage("Opción no válida. Escribe 0 para volver.");
+  }
+}
+
 </script>
 
 
