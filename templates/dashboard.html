@@ -1,5 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
+<style>
+@font-face {
+  font-family: 'Futura Std Bold';
+  src: local('Futura Std Bold');
+}
+</style>
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -403,6 +411,8 @@ let waitingForEmail = false;
 
 helpBubble.onclick = () => {
   helpChat.classList.remove("hidden");
+  helpChat.classList.add("show");
+  helpChat.classList.remove("hidden");
   chatBody.innerHTML = "";
   waitingForEmail = false;
   chatStep = "menu";
@@ -413,6 +423,9 @@ helpBubble.onclick = () => {
 
 closeHelp.onclick = () => {
   helpChat.classList.add("hidden");
+  helpChat.classList.remove("show");
+  setTimeout(() => helpChat.classList.add("hidden"), 300);
+
 };
 
 sendChat.onclick = handleUserMessage;
