@@ -18,6 +18,9 @@ DATA_FOLDER = os.path.join(app.root_path, "data")
 GENERATED_FOLDER = os.path.join(app.root_path, "static", "generated")
 os.makedirs(GENERATED_FOLDER, exist_ok=True)
 app.permanent_session_lifetime = timedelta(minutes=30)  # Expira a los 30 min
+print("DEBUG DATA_FOLDER:", DATA_FOLDER)
+print("DEBUG existe DATA_FOLDER:", os.path.exists(DATA_FOLDER))
+print("DEBUG archivos encontrados:", os.listdir(DATA_FOLDER) if os.path.exists(DATA_FOLDER) else "NO EXISTE")
 
 # Usuarios y sus artistas (conserva la estructura original)
 USERS = {
@@ -210,6 +213,7 @@ def load_admin_summary(quarter, year):
 
     return summary_data
 
+
 def generate_song_bar_chart(df):
     df_sorted = df.sort_values(by="Royalties", ascending=False).head(10)
     fig, ax = plt.subplots(figsize=(10, 6), facecolor='none')
@@ -387,7 +391,7 @@ def load_excel_data(artist, quarter, year):
 
 def calculate_future_total(artist, selected_quarter, selected_year):
     all_files = os.listdir(DATA_FOLDER)
-    pattern = re.compile(re.escape(artist) + r"T(\d)-(\d{4})\.xlsx")
+    pattern = re.compile(re.escape(artist) + r"T(\d{1,2})-(\d{4})\.xlsx")
     matched = [m for m in (pattern.match(f) for f in all_files) if m]
     total = 0.0
 
@@ -478,73 +482,53 @@ def dashboard():
     
     username = session["user"]
     user_info = USERS.get(username)
-    artist = user_info.get("artist", username)
-    artist_name = user_info.get("name", artist)
-    artist_image = f"images/{artist}.jpg"
     is_admin = session.get("is_admin", False)
 
-    
-    all_files = os.listdir(DATA_FOLDER)
-    pattern = re.compile(re.escape(artist) + r"T(\d)-(\d{4})\.xlsx")
-    matched = [m for m in (pattern.match(f) for f in all_files) if m]
-
-
-    available_years = sorted(set(m.group(2) for m in matched))
-    selected_year = request.args.get("year") or (available_years[-1] if available_years else "2024")
-    available_quarters = sorted(set(m.group(1) for m in matched if m.group(2) == selected_year), reverse=True)
-    selected_quarter = request.args.get("quarter") or (available_quarters[0] if available_quarters else "1")
-
+    # 1. Determinar qué artista buscar
     if is_admin:
-        selected_artist_key = request.args.get("artist")
-        if not selected_artist_key:
-            selected_artist_key = "all"
-
+        selected_artist_key = request.args.get("artist") or "all"
         if selected_artist_key == "all":
             artist_file_key = "resumen_por_artista_"
             artist_name = "Resumen General"
-            image_filename = "resumen_general.png"
         else:
             selected_user_info = USERS.get(selected_artist_key, {})
             artist_file_key = selected_user_info.get("artist", selected_artist_key)
             artist_name = artist_file_key
-            image_filename = f"{artist_file_key}.jpg"
-
-        image_path = os.path.join("static", "images", image_filename)
-        artist_image = image_path if os.path.exists(image_path) else "images/default.jpg"
-        available_artists = ["all"] + [k for k in USERS if k != "AdminUser"]
-
     else:
         selected_artist_key = username
         artist_file_key = user_info.get("artist", selected_artist_key)
         artist_name = artist_file_key
-        image_filename = f"{artist_file_key}.jpg"
 
-        image_path = os.path.join("static", "images", image_filename)
-        artist_image = f"images/{image_filename}" if os.path.exists(image_path) else "images/default.jpg"
-        available_artists = []
-
+    # 2. Buscar archivos en la carpeta DATA_FOLDER
     all_files = os.listdir(DATA_FOLDER)
-
+    
+    # Ajustamos el patrón según tus logs (buscamos los que tienen T)
     if selected_artist_key == "all":
-        pattern = re.compile(r"resumen_por_artista_T(\d)-(\d{4})\.xlsx")
+        pattern = re.compile(r"resumen_por_artista_T(\d{1,2})-(\d{4})\.xlsx")
     else:
-        pattern = re.compile(re.escape(artist_file_key) + r"T(\d)-(\d{4})\.xlsx")
+        pattern = re.compile(re.escape(artist_file_key) + r"T(\d{1,2})-(\d{4})\.xlsx")
 
     matched = [m for m in (pattern.match(f) for f in all_files) if m]
 
+    # 3. Extraer Años y Trimestres con ORDEN NUMÉRICO (IMPORTANTE)
     available_years = sorted(set(m.group(2) for m in matched))
-    selected_year = request.args.get("year") or (available_years[-1] if available_years else "2024")
+    selected_year = request.args.get("year") or (available_years[-1] if available_years else "2025")
+    
+    # AQUÍ ESTÁ EL FIX REAL: key=int para que 10 > 8
     available_quarters = sorted(
         set(m.group(1) for m in matched if m.group(2) == selected_year),
+        key=int, 
         reverse=True
     )
-    selected_quarter = request.args.get("quarter") or (available_quarters[0] if available_quarters else "1")
     
-    print(f"DEBUG dashboard: Usuario: {username}, Admin: {is_admin}")
-    print(f"DEBUG dashboard: Artista seleccionado: {selected_artist_key}")
-    print(f"DEBUG dashboard: Artist file key: {artist_file_key}")
-    print(f"DEBUG dashboard: Años disponibles: {available_years}")
-    print(f"DEBUG dashboard: Trimestres disponibles: {available_quarters}")
+    selected_quarter = request.args.get("quarter") or (available_quarters[0] if available_quarters else "1")
+
+    # 4. Imagen del artista
+    image_filename = f"{artist_name}.jpg" if selected_artist_key != "all" else "resumen_general.png"
+    image_path = os.path.join("static", "images", image_filename)
+    artist_image = f"images/{image_filename}" if os.path.exists(image_path) else "images/default.jpg"
+
+    available_artists = ["all"] + [k for k in USERS if k != "AdminUser"] if is_admin else []
 
     return render_template(
         "dashboard.html",
@@ -557,7 +541,7 @@ def dashboard():
         available_artists=available_artists,
         selected_artist_key=selected_artist_key,
         is_admin=is_admin,
-        USERS=USERS  # <-- ✅ AQUI está el FIX
+        USERS=USERS
     )
 
 
